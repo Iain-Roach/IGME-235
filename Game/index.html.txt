@@ -9,9 +9,12 @@ Dig Dug
 <body>
 Publishing Info
 
-Published by: Atari, Inc.
+Published by: Atari, Inc. 
 Developed by: Namco Limited
 Released: Apr, 1982
+
+
+<img src="dig-dug-burnt.png" alt="An image of Dig Dug">
 
 
 Description
