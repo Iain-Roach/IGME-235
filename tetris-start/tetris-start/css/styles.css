@@ -1,0 +1,33 @@
+/* Do everything in this file */
+body {
+    padding: 1em;
+}
+h2, h3 {
+    border-bottom: 1px solid red;
+}
+h2 {
+    clear: both;
+}
+h3 {
+    clear: both;
+}
+figure {
+    float: right;
+    width: 40%;
+}
+figure img {
+    width: 100%;
+    height:auto;
+}
+.tet {
+    float: left;
+    border: 1px solid red;
+    width: 40%;
+    padding: 10px;
+}
+footer {
+    position: fixed;
+    top: 0px;
+    left: 70%;
+    z-index: -1;
+}
