@@ -1,33 +1,35 @@
-/* Do everything in this file */
-body {
-    padding: 1em;
-}
-h2, h3 {
-    border-bottom: 1px solid red;
-}
-h2 {
-    clear: both;
-}
-h3 {
-    clear: both;
+header, main, footer {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 figure {
-    float: right;
-    width: 40%;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
 }
 figure img {
     width: 100%;
-    height:auto;
+}
+#tetlist {
+    display: flex;
+    flex-flow: row wrap;
 }
 .tet {
-    float: left;
-    border: 1px solid red;
-    width: 40%;
-    padding: 10px;
+    flex: 0 1 450px;
+    border: 1px solid black;
+    text-align: center;
 }
-footer {
-    position: fixed;
-    top: 0px;
-    left: 70%;
-    z-index: -1;
+.tet img {
+    width: 60%;
+}
+span {
+    display: block;
+    margin: 10px 0px 10px 0px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.aliases {
+    text-align: left;
+    margin: 1em;
 }
