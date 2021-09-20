@@ -59,6 +59,8 @@ Grid Formatting
                              "footer   footer   footer";
         grid-template-rows: 1fr 10fr 1fr;
         grid-template-columns: 20% auto 20%;
+        max-width: 1200px;
+        margin: 0 auto;
     }
 }
 
