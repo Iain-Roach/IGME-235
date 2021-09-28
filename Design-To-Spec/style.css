@@ -6,6 +6,15 @@ body {
 
 }
 
+#class {
+    float: right;
+    padding-right: 1em;
+}
+
+h1 {
+    display: inline-flex;
+    padding-left: 1em;
+}
 
 #wrapper {
     display: grid;
@@ -18,12 +27,6 @@ body {
     grid-template-rows: .25fr 4fr 4fr 4fr 1.5fr; 
 }
 
-#oaktree {
-    display: grid;
-    height: 100%;
-    grid-template-areas: "left treeimage treetext right";
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-}
 
 header {
     grid-area: header;
@@ -31,8 +34,7 @@ header {
     color: #fff;
 }
 
-#tree{
-    grid-area: tree;
+#tree {
     background-color: #35363D;
 }
 
@@ -47,7 +49,6 @@ header {
 }
 
 #items {
-    grid-area: items;
     background-color: #35363D;
 }
 
@@ -55,4 +56,6 @@ footer {
     grid-area: footer;
     border-top: 5px solid #FFF;
     background-image: url("Assets/trees.jpg");
+    background-position: 0px -900px;
+    background-repeat: no-repeat;
 }
