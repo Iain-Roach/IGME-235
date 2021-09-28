@@ -1,18 +1,11 @@
 html {
-    
+    color:#fff;
 }
 
 body {
 
 }
 
-header {
-
-}
-
-footer {
-    border-top: 5px solid black;
-}
 
 #wrapper {
     display: grid;
@@ -22,17 +15,44 @@ footer {
                             "buffer"
                             "items"
                             "footer";
-    grid-template-rows: .5fr 4fr 4fr 4fr 1.5fr; 
+    grid-template-rows: .25fr 4fr 4fr 4fr 1.5fr; 
+}
+
+#oaktree {
+    display: grid;
+    height: 100%;
+    grid-template-areas: "left treeimage treetext right";
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 header {
     grid-area: header;
+    background-color: #686868;
+    color: #fff;
 }
 
-article {
+#tree{
     grid-area: tree;
+    background-color: #35363D;
+}
+
+#background {
+    grid-area: buffer;
+    background-image: url("Assets/valley.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 50% 60%;
+    transform: scale(2);
+    z-index: -1;
+}
+
+#items {
+    grid-area: items;
+    background-color: #35363D;
 }
 
 footer {
     grid-area: footer;
+    border-top: 5px solid #FFF;
+    background-image: url("Assets/trees.jpg");
 }
