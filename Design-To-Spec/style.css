@@ -9,9 +9,17 @@ body {
 #class {
     float: right;
     padding-right: 1em;
+    border: 1px solid white;
+}
+#name {
+    float: right;
+    
+    padding-right: 1em;
+    border: 1px solid white;
 }
 
 h1 {
+    font-size: 20px;
     display: inline-flex;
     padding-left: 1em;
 }
@@ -30,12 +38,18 @@ h1 {
 
 header {
     grid-area: header;
+    display: flex;
     background-color: #686868;
     color: #fff;
 }
 
 #tree {
+    grid-area: tree;
     background-color: #35363D;
+    display: flex;
+    /* flex-wrap: nowrap; */
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 #background {
@@ -46,10 +60,17 @@ header {
     background-size: 50% 60%;
     transform: scale(2);
     z-index: -1;
+    height: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 #items {
+    grid-area: items;
     background-color: #35363D;
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: center;
 }
 
 footer {
@@ -58,4 +79,25 @@ footer {
     background-image: url("Assets/trees.jpg");
     background-position: 0px -900px;
     background-repeat: no-repeat;
+}
+
+#tree article {
+    border: 1px solid white;
+    flex: 0 0 300px;
+    flex-flow: row wrap;
+    height: 300px;
+    margin: 5px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#items article {
+    border: 1px solid white;
+    margin: 5px;
+    flex: 0 0 21%;
+    height: auto;
+    flex-flow: row wrap;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: auto;
 }
