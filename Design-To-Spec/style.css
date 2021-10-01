@@ -1,17 +1,32 @@
 html {
     color:#fff;
+    font-family: 'retro_computerregular';
 }
 
-body {
-
+@font-face {
+    font-family: 'retro_computerregular';
+    src: url('Fonts/retro_computer_personal_use-webfont.woff2') format('woff2'),
+         url('Fonts/retro_computer_personal_use-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
 
 
 h1 {
+    font-family: 'retro_computerregular';
     font-size: 20px;
-    
     padding-left: 1em;
+    font-weight: normal;
+}
+h2 {
+    margin-left: 1rem;
+    font-weight: normal;
+}
+p {
+    margin-left: 1rem;
+    margin-right: 2em;
+    font-size: 12px;
 }
 
 #wrapper {
@@ -40,8 +55,7 @@ header {
     margin-top: 1rem;
     justify-content: right;
     justify-self: right;
-    width: 10vw;
-    border: 1px solid white;
+    width: 20vw;
 }
 
 #tree {
@@ -98,6 +112,12 @@ footer {
 #grad {
     background-image: linear-gradient(to bottom right, #E8FDF5, #244D3E);
 }
+#grad img {
+    width: 90%;
+    position: relative;
+    top: 5%;
+    left: 5%;
+}
 #items article {
     position: relative;
     border: 5px solid white;
@@ -113,6 +133,15 @@ footer {
 .image
 {
     background-color: #324E44;
+    justify-content: center;
+
+}
+.image img {
+    width: 50%;
+    position: absolute;
+    left: 25%;
+    top: 40%;
+    border: 1px black solid;
 }
 
 .text {
