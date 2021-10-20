@@ -22,7 +22,8 @@
          */
         window.onload = function () {
             makeSampleMonsters();
-            showMonsters();
+            showMonsters("goomba", "#goombas");
+            showMonsters("boo", "#boos");
         }
 
         /**
@@ -38,26 +39,44 @@
             monsters.push(monster);
             monster = makeGoomba("Alice", 40, 150, 200);
             monsters.push(monster);
+
+            monster = makeBoos("Bob", 20, 20, 50);
+            monsters.push(monster);
+            monster = makeBoos("Jeffery", 50, 200, 300);
+            monsters.push(monster);
+            monster = makeBoos("Riza", 30, 100, 150);
+            monsters.push(monster);
         }
 
         /**
          * Function that shows our monsters (just Goombas for now)
          * 
          */
-        function showMonsters() {
-            let goombaList = document.querySelector("#goombas");
+        function showMonsters(type, listId) {
+            let monsterList = document.querySelector(listId);
 
             for (let i = 0; i < monsters.length; i++) {
                 let liStr = "";
+                let isType = true;
                 let li = document.createElement("li");
 
                 for (let key in monsters[i]) {
                     if (typeof monsters[i][key] !== "function") {
                         liStr += `<b>${key}:</b> ${monsters[i][key]}<br />`;
+                        if(monsters[i].type == type)
+                        {
+                            isType = true;
+                        }
+                        else {
+                            isType = false;
+                        }
                     }
                 }
+                if(isType)
+                {
                 li.innerHTML = liStr;
-                goombaList.appendChild(li);
+                monsterList.appendChild(li);
+                }
             }
         }
 
@@ -71,6 +90,7 @@
                 hp: 100,
                 speed: 10,
                 score: 100,
+                type: "",
                 status: function () {
                     console.log("name: " + this.name + ", hp: " + this.hp + ", speed: " + this.speed + ", score: " + this.score);
                 }
@@ -87,6 +107,7 @@
             goomba.hp = hp;
             goomba.speed = speed;
             goomba.score = score;
+            goomba.type = "goomba";
             goomba.takeDamage = function (dmgVal) {
                 goomba.hp -= dmgVal;
             }
@@ -95,7 +116,22 @@
             Object.seal(goomba);
             return goomba;
         }
+        
+        function makeBoos(name, hp, speed, score) {
+            let boo = createBaseMonster();
+            boo.name = name;
+            boo.hp = name;
+            boo.speed = speed;
+            boo.score = score;
+            boo.type = "boo";
+            boo.takeDamage = function (dmgVal) {
+                boo.hp -= dmgVal;
+            }
+            boo.powerUp = powerUp;
 
+            Object.seal(boo);
+            return boo;
+        }
         /**
          * Function that can be used inside a monster object.
          * 
@@ -113,6 +149,9 @@
     <div id="lineUp">
         <h1>Goombas</h1>
         <ul id="goombas">
+        </ul>
+        <h1>Boos</h1>
+        <ul id="boos">
         </ul>
     </div>
 </body>
