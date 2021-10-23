@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Random Phrases-HW</title>
+	<link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="wrapper">
+    <header>
+    <h1>Random Gandalf Phrases</h1>
+    </header>
+
+    <div id="phrases">
+
+        <article>
+            <h2 id="head">A Word From the Wise</h2>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae veniam culpa maiores error ullam, corrupti, fugit quasi suscipit quibusdam debitis voluptas, beatae magnam impedit autem!
+            </p>
+            <button>*AWFTW</button>
+        </article>
+
+        
+    </div>
+
+
+<footer>
+    <h1>Iain Roach</h1>
+</footer>
+<script>
+"use strict";
+//Create array 5- phrases
+let phrase =   ["“All we have to decide is what to do with the time that is given us.”",
+                "“I will not say: do not weep; for not all tears are an evil.”",
+                "“It is not despair, for despair is only for those who see the end beyond all doubt. We do not.”",
+                "“The treacherous are ever distrustful.”",
+                "“He that breaks a thing to find out what it is has left the path of wisdom.”"]
+//on page load or reload get a random phrase (Math.Random())
+window.onload = function () {
+    displayQuote();
+}
+
+let quoteButton = document.querySelector("button");
+
+quoteButton.addEventListener('click', displayQuote);
+
+
+//Function displayQuote on button that generates and display a random quote
+function displayQuote(e)
+{
+    let rand = Math.floor(Math.random() * phrase.length);
+    let quote = document.querySelector('p');
+    quote.innerHTML = phrase[rand];
+}
+
+</script>
+</div>
+</body>
+</html>

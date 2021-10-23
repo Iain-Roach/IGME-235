@@ -1,0 +1,103 @@
+html {
+    font-family: 'Roboto', sans-serif;
+}
+* {
+    box-sizing: border-box;
+}
+body{
+    background-color: #F6f8f7;
+    margin: 0px;
+}
+#wrapper {
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    margin: 0 auto;
+    grid-template-areas:    "header"
+                            "phrases"
+                            "footer";
+    grid-template-rows: .5fr 8fr .5fr;
+}
+
+header {
+    grid-area: header;
+    background-color: #cccccc;
+}
+header h1 {
+    text-align: center;
+    color: #11120d;
+}
+
+#phrases {
+    display: flex;
+    flex-wrap: wrap;
+    grid-area: phrases;
+    background-color: #F6f8f7;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+#phrases article {
+   
+    display: flex;
+    flex-flow: column;
+    margin-top: 2em;
+    flex: 0 0 380px;
+    width: 380px;
+    height: 380px;
+    background-image: url("gandalf.jpg");
+    overflow: hidden;
+    padding: 0%;
+}
+
+article #head {
+    background-color: rgba(50, 50, 50, 0.3);
+    text-align: center;
+    color: #f6f8f7;
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+
+}
+
+article p {
+    background-color: rgba(50, 50, 50, 0.3);
+    margin-top: 6em;
+    padding-left: 1em;
+    padding-right: 1em;
+    color: #f6f8f7;
+    text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+    font-size: large;
+    font-weight: bold;
+}
+
+article button {
+    
+    display: block;
+    background-color: #f6f8f7;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    font-size: 16px;
+    margin: auto;
+    margin-bottom: 50px;
+    cursor: pointer;
+    transition-duration: .4s;
+    
+    box-shadow: 0 9px #999
+}
+
+button:hover {
+    background-color: rgb(173, 173, 173);
+}
+
+button:active {
+    box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+footer {
+    grid-area: footer;
+}
+footer h1 {
+    text-align: center;
+}
