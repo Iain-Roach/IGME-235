@@ -34,21 +34,28 @@ button{
 
   div {
       border: 1px solid black;
-
-     
   }
 
-  #spellheader {
-      
+  #spellHeader {
+      display: flex;
+      justify-content: space-around;
   }
 
-  #spellname {
+  #spellName {
     margin: .25em 0em .5em 1em;
     border-bottom: 2px solid red;
     width: fit-content;
   }
 
-  #spelllevel {
+  #spellLevel {
       margin: .6em 0 0 1em;
 
+  }
+
+  #description {
+      margin: .6em .25em .6em 1em;
+  }
+
+  #spellHeader h4 {
+      margin: .6em .25em 0 1em;
   }
