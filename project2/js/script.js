@@ -1,5 +1,5 @@
 const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
-
+let length = 0;
 
 window.onload = (e) => {document.querySelector("#testButton").onclick = buttonClicked
 getData(BASE_URL);
@@ -55,16 +55,20 @@ function dataLoaded(e) {
     if(!obj.results || obj.results.length == 0)
     {
         //Means you are searching for a specific spell
-        console.log("Bail out");
-
-
-
-
-
+        console.log("--------------------------------------------------------------");
+        let cardList = document.querySelectorAll(".spellCard");
+        console.log(cardList);
+        for(let i = 0; i < cardList.length; i++)
+        {
+            let cardHeader = cardList[i].querySelectorAll(".spellHeader");
+            let spellName = cardHeader[0].querySelectorAll(".spellName");
+            spellName[0].innerHTML = obj.name;
+        }
         return;
     }
 
     let results = obj.results;
+    let length = results.length;
     //Loop through this for each item and create a new spellcard div
     for (let i=0; i< results.length; i++)
     {
@@ -75,10 +79,12 @@ function dataLoaded(e) {
         if(!smallURL) smallURL = "N/A";
 
         let spellURL = BASE_URL + smallURL;
-
-        createSpellCard(spellURL, i);
+        
+        createSpellCard(i);
     }
-    console.log(document.getElementsByClassName("spellCard"));
+
+
+    //console.log(document.getElementsByClassName("spellCard"));
     // let description = obj.desc;
     // console.log("Desc: " + obj.desc);
     // let p = document.querySelector("#description");
@@ -132,11 +138,9 @@ function suffixify(lvl)
     }
 }
 
-function createSpellCard(url, index)
+function createSpellCard(index)
 {
     //Creates a div with all according inside elements
-    getData(url);
-
     let card = document.createElement('div');
     card.className = "spellCard";
     document.getElementById("spellList").appendChild(card);
@@ -148,7 +152,7 @@ function createSpellCard(url, index)
 
     let spell = document.createElement('h3');
     spell.className = "spellName";
-    spell.innerHTML = "test";
+    //spell.innerHTML = "obj.name";
     let headerList = cardList[index].getElementsByClassName("spellHeader");
     headerList[0].appendChild(spell);
 
