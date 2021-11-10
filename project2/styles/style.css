@@ -32,15 +32,17 @@ button{
   
   button:focus {outline:0;}
 
-  div {
+  .spellCard {
       border: 1px solid black;
       margin: 5px;
-      height: 3em;
+      height: fit-content;
+      justify-content: center;
   }
 
-  #spellHeader {
+  .spellHeader {
       display: flex;
       justify-content: space-around;
+      border-bottom: 1px solid red;
   }
 
   .spellName {
@@ -49,15 +51,16 @@ button{
     width: fit-content;
   }
 
-  #spellLevel {
+  .spellLevel {
       margin: .6em 0 0 1em;
 
   }
 
-  #description {
+  .description {
       margin: .6em .25em .6em 1em;
   }
 
-  #spellHeader h4 {
+  .spellHeader h4 {
       margin: .6em .25em 0 1em;
   }
+

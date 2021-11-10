@@ -135,6 +135,8 @@ function suffixify(lvl)
 function createSpellCard(url, index)
 {
     //Creates a div with all according inside elements
+    getData(url);
+
     let card = document.createElement('div');
     card.className = "spellCard";
     document.getElementById("spellList").appendChild(card);
@@ -146,7 +148,37 @@ function createSpellCard(url, index)
 
     let spell = document.createElement('h3');
     spell.className = "spellName";
-    spell.innerHTML = "test" + index;
+    spell.innerHTML = "test";
     let headerList = cardList[index].getElementsByClassName("spellHeader");
     headerList[0].appendChild(spell);
+
+    let level = document.createElement('h4');
+    level.className = "spellLevel";
+    level.innerHTML = "Level Test";
+    headerList[0].appendChild(level);
+
+    let time = document.createElement('h4');
+    time.className = "castingTime";
+    time.innerHTML = "Casting Test";
+    headerList[0].appendChild(time);
+
+    let range = document.createElement('h4');
+    range.className = "range";
+    range.innerHTML = "Range Test";
+    headerList[0].appendChild(range);
+
+    let duration = document.createElement('h4');
+    duration.className = "duration";
+    duration.innerHTML = "Duration Test";
+    headerList[0].appendChild(duration);
+
+    let components = document.createElement('h4');
+    components.className = "components";
+    components.innerHTML = "Components: TEST";
+    headerList[0].appendChild(components);
+
+    let description = document.createElement('p');
+    description.className = "description";
+    description.innerHTML = "lorem ipsum lmao";
+    card.appendChild(description);
 }
