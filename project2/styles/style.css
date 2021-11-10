@@ -34,6 +34,8 @@ button{
 
   div {
       border: 1px solid black;
+      margin: 5px;
+      height: 3em;
   }
 
   #spellHeader {
@@ -41,7 +43,7 @@ button{
       justify-content: space-around;
   }
 
-  #spellName {
+  .spellName {
     margin: .25em 0em .5em 1em;
     border-bottom: 2px solid red;
     width: fit-content;
