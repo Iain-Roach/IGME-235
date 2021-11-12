@@ -2,9 +2,9 @@ const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
 let length = 0;
 
 window.onload = (e) => {document.querySelector("#testButton").onclick = buttonClicked
+
 getData(BASE_URL);
-
-
+createSpellBook();
 
 };
 
@@ -24,8 +24,8 @@ function buttonClicked(){
 
     term = term.replaceAll(' ', '-');
 
-    // if(term.length < 1) 
-    // return;
+    //if(term.length < 1) 
+    //return;
 
     url += term;
 
@@ -46,44 +46,130 @@ function getData(url) {
 }
 
 function dataLoaded(e) {
+    let spellList = document.querySelector("#spellList")
+        spellList.remove();
+
     let xhr = e.target;
 
     console.log(xhr.responseText);
 
     let obj = JSON.parse(xhr.responseText);
 
+    if(obj.results)
+    {
+        createSpellBook();
+        console.log("TEST");
+        let results = obj.results;
+        //Loop through this for each item and create a new spellcard div
+        for (let i=0; i< results.length; i++)
+        {
+            let result = results[i];
+
+            //smallURL is the index to add to the base url for the spell
+            let smallURL = result.index;
+            if(!smallURL) smallURL = "N/A";
+
+            let spellURL = BASE_URL + smallURL;
+            
+            createSpellCard(i);
+
+            let request = new XMLHttpRequest();
+            request.open("GET", spellURL);
+            request.onreadystatechange = function() {
+                if(request.readyState === XMLHttpRequest.DONE && request.status === 200)
+                {
+                    let data = JSON.parse(request.responseText);
+                    //Change spellCard data here
+                    let name = document.querySelectorAll(".spellName");
+                    name[i].innerHTML = data.name;
+
+                    let level = document.querySelectorAll(".spellLevel");
+                    if(data.level != 0)
+                    {
+                    let suffix = suffixify(data.level);
+                    level[i].innerHTML = data.level + suffix + " level " + data.school.name;
+                    }
+                    else
+                    {
+                        level[i].innerHTML = data.school.name + " Cantrip";
+                    }
+
+                    let castingTime = document.querySelectorAll(".castingTime");
+                    castingTime[i].innerHTML = data.casting_time;
+
+                    let range = document.querySelectorAll(".range");
+                    range[i].innerHTML = "Range: " + data.range;
+
+                    let duration = document.querySelectorAll(".duration");
+                    if(data.concentration)
+                    {
+                        duration[i].innerHTML = "Concentration " + data.duration;
+                    }
+                    else
+                    {
+                        duration[i].innerHTML = data.duration;
+                    }
+
+                    let componentsTest = document.querySelectorAll(".components");
+                    let compString = "Components: ";
+                    data.components.forEach(component => compString += component + " ");
+                    componentsTest[i].innerHTML = compString;
+
+                    let description = document.querySelectorAll(".description");
+                    description[i].innerHTML = data.desc;
+                }
+            }
+            request.send();
+        }
+ 
+    }
+
     if(!obj.results || obj.results.length == 0)
     {
         //Means you are searching for a specific spell
-        console.log("--------------------------------------------------------------");
-        let cardList = document.querySelectorAll(".spellCard");
-        console.log(cardList);
-        for(let i = 0; i < cardList.length; i++)
-        {
-            let cardHeader = cardList[i].querySelectorAll(".spellHeader");
-            let spellName = cardHeader[0].querySelectorAll(".spellName");
-            spellName[0].innerHTML = obj.name;
-        }
+        //Remove current card list
+        createSpellBook();
+        createSpellCard(0);
+        
+                    let name = document.querySelector(".spellName");
+                    name.innerHTML = obj.name;
+
+                    let level = document.querySelector(".spellLevel");
+                    if(obj.level != 0)
+                    {
+                    let suffix = suffixify(obj.level);
+                    level.innerHTML = obj.level + suffix + " level " + obj.school.name;
+                    }
+                    else
+                    {
+                        level.innerHTML = obj.school.name + " Cantrip";
+                    }
+
+                    let castingTime = document.querySelector(".castingTime");
+                    castingTime.innerHTML = obj.casting_time;
+
+                    let range = document.querySelector(".range");
+                    range.innerHTML = "Range: " + obj.range;
+
+                    let duration = document.querySelector(".duration");
+                    if(obj.concentration)
+                    {
+                        duration.innerHTML = "Concentration " + obj.duration;
+                    }
+                    else
+                    {
+                        duration.innerHTML = obj.duration;
+                    }
+
+                    let componentsTest = document.querySelector(".components");
+                    let compString = "Components: ";
+                    obj.components.forEach(component => compString += component + " ");
+                    componentsTest.innerHTML = compString;
+
+                    let description = document.querySelector(".description");
+                    description.innerHTML = obj.desc;
         return;
     }
-
-    let results = obj.results;
-    let length = results.length;
-    //Loop through this for each item and create a new spellcard div
-    for (let i=0; i< results.length; i++)
-    {
-        let result = results[i];
-
-        //smallURL is the index to add to the base url for the spell
-        let smallURL = result.index;
-        if(!smallURL) smallURL = "N/A";
-
-        let spellURL = BASE_URL + smallURL;
-        
-        createSpellCard(i);
-    }
-
-
     //console.log(document.getElementsByClassName("spellCard"));
     // let description = obj.desc;
     // console.log("Desc: " + obj.desc);
@@ -138,6 +224,18 @@ function suffixify(lvl)
     }
 }
 
+//creates location to put cards allows removal of #spelllist to reset card list
+function createSpellBook()
+{
+    if(!document.querySelector("#spellList"))
+    {
+    let spellBook = document.createElement('section');
+    spellBook.id = "spellList";
+    let location = document.querySelector("#spellSlot");
+    location.appendChild(spellBook);
+    }
+}
+
 function createSpellCard(index)
 {
     //Creates a div with all according inside elements
@@ -152,7 +250,7 @@ function createSpellCard(index)
 
     let spell = document.createElement('h3');
     spell.className = "spellName";
-    //spell.innerHTML = "obj.name";
+    spell.innerHTML = "obj.name";
     let headerList = cardList[index].getElementsByClassName("spellHeader");
     headerList[0].appendChild(spell);
 
