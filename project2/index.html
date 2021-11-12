@@ -9,8 +9,41 @@
     <link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
 <body>
+    <header><h1>D&D Spell Book</h1></header>
+
+    <div>
+        <label for="options">Additional Options</label>
+    <input id="options" type="checkbox" name="extraOptions" value="options">
+    </div>
+
+    <div id="additionalOptions">
+        <label for="levelSort">Sort by Level:</label>
+    <select id="levelSort">
+        <option value="base">level</option>
+        <option value="cantrip">Cantrip</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+    </select>
+
+    <label for="concentration">Concentration</label>
+    <input id="concentration" type="checkbox" name="concentration" value="false">
+    </div>
+
     <button type="button" id="testButton" class="red">Test API</button>
-    <input id="spellTerm" type="text" size="20" maxlength="20" autofocus value="magic-missile" />
+    <input id="spellTerm" type="text" size="20" maxlength="20" autofocus value="">
+
+    
+    
+
+    
+    
 
     <section id="spellSlot"></section>
     </section>

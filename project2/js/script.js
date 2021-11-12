@@ -1,12 +1,27 @@
 const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
-let length = 0;
 
 window.onload = (e) => {document.querySelector("#testButton").onclick = buttonClicked
 
 getData(BASE_URL);
 createSpellBook();
 
-};
+let additionalOptions = document.querySelector("#options");
+additionalOptions.checked = true;
+
+
+additionalOptions.onchange = e => {
+    if(additionalOptions.checked)
+    {
+        document.querySelector("#additionalOptions").hidden = false;
+
+    }
+    else{
+        document.querySelector("#additionalOptions").hidden = true;
+    }
+    
+    };
+}
+
 
 let displayTerm = "";
 
