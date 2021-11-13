@@ -1,12 +1,28 @@
+const compKey = ".componentSearch";
+const levelKey = "#levelSort";
+const concentrationKey = "#concentration";
+
+let compSelected = false
+let concentrationTest = false;
+let levelSelected = false;
+let cantripSelected = false;
+
+
 const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
 
-window.onload = (e) => {document.querySelector("#testButton").onclick = buttonClicked
+window.onload = (e) => {
+document.querySelector("#testButton").onclick = buttonClicked
 
 getData(BASE_URL);
 createSpellBook();
 
+componentList = document.querySelectorAll(compKey);
+levelSelect = document.querySelector(levelKey);
+concentrationCheck = document.querySelector(concentrationKey);
+
 let testOptions = document.querySelector("#options");
 testOptions.checked = true;
+
 
 
  testOptions.onchange = e => {
@@ -46,6 +62,35 @@ function buttonClicked(){
 
     console.log(url);
 
+    //Checks to see if any of the components have been selected
+    compSelected = false;
+    for(let i = 0; i < componentList.length; i++)
+    {
+        if (componentList[i].checked)
+        {
+            compSelected = true;
+        }
+    }
+
+    //Checks to see if any levels are selected
+    levelSelected = false;
+    cantripSelected = false;
+    
+    if(levelSelect.value != "base")
+    {
+        levelSelected = true;
+        if(levelSelect.value == "cantrip")
+        {
+            cantripSelected = true;
+        }
+    }
+
+    concentrationTest = false;
+    if(concentrationCheck.checked)
+    {
+        concentrationTest = true;
+    }
+
     getData(url);
 }
 
@@ -70,6 +115,7 @@ function dataLoaded(e) {
 
     let obj = JSON.parse(xhr.responseText);
 
+    //At base create a spell book with all items
     if(obj.results)
     {
         createSpellBook();
@@ -139,6 +185,7 @@ function dataLoaded(e) {
  
     }
 
+    //If the JSON list doesn't have a results parameter searching for a specific spell
     if(!obj.results || obj.results.length == 0)
     {
         //Means you are searching for a specific spell
@@ -185,6 +232,24 @@ function dataLoaded(e) {
                     description.innerHTML = obj.desc;
         return;
     }
+
+
+
+    //When actually working on this next week
+    //Add a counter when making the spell cards while checking that spells parameters
+    //Save these to a list
+    //THen for searching through just create search function that only creates a spell card for
+    //Those with ceratin parameters
+    //Might have to reorder things.
+    //Now for some specific searching -.-
+    if(concentrationTest || levelSelected || compSelected)
+    {
+        console.log("one of the stuff has been selected");
+        console.log(concentrationTest);
+        console.log(levelSelected);
+        console.log(compSelected);
+    }
+    
     //console.log(document.getElementsByClassName("spellCard"));
     // let description = obj.desc;
     // console.log("Desc: " + obj.desc);
