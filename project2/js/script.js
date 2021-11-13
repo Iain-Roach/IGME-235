@@ -5,21 +5,21 @@ window.onload = (e) => {document.querySelector("#testButton").onclick = buttonCl
 getData(BASE_URL);
 createSpellBook();
 
-let additionalOptions = document.querySelector("#options");
-additionalOptions.checked = true;
+let testOptions = document.querySelector("#options");
+testOptions.checked = true;
 
 
-additionalOptions.onchange = e => {
-    if(additionalOptions.checked)
-    {
-        document.querySelector("#additionalOptions").hidden = false;
+ testOptions.onchange = e => {
+     if(testOptions.checked)
+     {
+         document.querySelector("#additionalOptions").hidden = false;
 
-    }
-    else{
-        document.querySelector("#additionalOptions").hidden = true;
-    }
+     }
+     else{
+         document.querySelector("#additionalOptions").hidden = true;
+     }
     
-    };
+     }
 }
 
 
