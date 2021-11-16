@@ -1,3 +1,13 @@
+// 11/15/2021
+// Notes: spellArray not being created in order?
+// Might want to make it so onload instead of creating spellcards then just fill out spell array
+// then create spellCards from spellArray
+// Spell array seems to be in order?
+// Single searching works now need to add sorting logic can easily use spell array :)
+
+
+
+
 const compKey = ".componentSearch";
 const levelKey = "#levelSort";
 const concentrationKey = "#concentration";
@@ -10,7 +20,8 @@ let compSelected = false
 let concentrationTest = false;
 let levelSelected = false;
 let cantripSelected = false;
-
+let term;
+let arrayCreated = false;
 
 const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
 
@@ -50,7 +61,7 @@ function buttonClicked(){
 
     
     let url = BASE_URL;
-    let term = document.querySelector("#spellTerm").value;
+    term = document.querySelector("#spellTerm").value;
     displayTerm = term;
 
     term = term.trim();
@@ -59,8 +70,8 @@ function buttonClicked(){
 
     term = term.replaceAll(' ', '-');
 
-    if(term.length < 1) 
-    return;
+    //if(term.length < 1) 
+    //return;
 
     url += term;
 
@@ -119,8 +130,16 @@ function dataLoaded(e) {
 
     let obj = JSON.parse(xhr.responseText);
 
-    if(obj.results)
+    if(!obj)
     {
+        console.log("error");
+        return;
+    }
+
+    if(obj.results && arrayCreated == false)
+    {
+        document.querySelector("#spellList").remove();
+        createSpellBook();
         let results = obj.results;
         for(let i = 0; i < results.length; i++)
         {
@@ -136,8 +155,33 @@ function dataLoaded(e) {
         }
         
     }
-    else {
-        console.log(obj);
+    else if(obj.results && arrayCreated == true)
+    {
+        document.querySelector("#spellList").remove();
+        createSpellBook();
+
+        for(let i = 0; i < spellArray.length; i++)
+        {
+            createSpellCard(spellArray[i]);
+        }
+    }
+    else if (!levelSelected && !compSelected && !concentrationTest && obj.name) {
+        //console.log(obj);
+        document.querySelector("#spellList").remove();
+        createSpellBook();
+        console.log(term);
+        let index = -1 // -1 if not found
+        for(let i = 0; i < spellArray.length; i++)
+        {
+            let element = spellArray[i];
+            if (element.index == term)
+            {
+                index = i;
+                break;
+            }
+        }
+        console.log(spellArray[index]);
+        createSpellCard(spellArray[index], true);
     }
     ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -377,6 +421,10 @@ function createSpellCard(index)
 
 function addToSpellArray(data) {
     spellArray.push(data);
+    if(spellArray.length == 319)
+    {
+        arrayCreated = true;
+    }
 }
 
 function getSpell(url) {
@@ -405,12 +453,15 @@ function spellLoaded(e)
     }
 
     //Add spell to spell array
-    addToSpellArray(obj);
+    if(!arrayCreated)
+    {
+        addToSpellArray(obj);
+    }
     createSpellCard(obj);
 }
 
 //Takes spellOBJ from spellArray and uses that spellArray index to create spellCards
-function createSpellCard(obj)
+function createSpellCard(obj, single = false)
 {
     let card = document.createElement('div');
     card.className = "spellCard";
@@ -419,13 +470,31 @@ function createSpellCard(obj)
     let cardHeader = document.createElement('div');
     cardHeader.className = "spellHeader";
     let cardList = document.getElementsByClassName("spellCard");
-    cardList[spellArray.indexOf(obj)].appendChild(cardHeader);
+    if(!single)
+    {
+        cardList[spellArray.indexOf(obj)].appendChild(cardHeader);
+    }
+    else
+    {
+        cardList[0].appendChild(cardHeader);
+    }
+    
 
     let spell = document.createElement('h3');
     spell.className = "spellName";
     spell.innerHTML = obj.name;
-    let headerList = cardList[spellArray.indexOf(obj)].getElementsByClassName("spellHeader");
-    headerList[0].appendChild(spell);
+    let headerList;
+    if(!single)
+    {
+        headerList = cardList[spellArray.indexOf(obj)].getElementsByClassName("spellHeader");
+        headerList[0].appendChild(spell);
+    }
+    else
+    {
+        headerList = cardList[0].getElementsByClassName("spellHeader");
+        headerList[0].appendChild(spell);
+    }
+
 
     let level = document.createElement('h4');
     level.className = "spellLevel";
