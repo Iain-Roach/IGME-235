@@ -30,7 +30,8 @@ let arrayCreated = false;
 const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
 
 window.onload = (e) => {
-document.querySelector("#testButton").onclick = buttonClicked
+//document.querySelector("#testButton").onclick = buttonClicked
+document.querySelector("#testButton").onclick = testGraphQL;
 
 //getData(BASE_URL);
 createSpellBook();
@@ -58,6 +59,49 @@ testOptions.checked = true;
 
 
 let displayTerm = "";
+
+function testGraphQL()
+{
+    console.log("testing graphql");
+    const query = `
+        query {
+            spells(limit: 319, filter: { level: 2 }) {
+                name
+                level
+                school {
+                    name
+                }
+                casting_time
+                range
+                duration
+                components
+                desc
+            }
+        }
+    `;
+    //api/spells/?school=Evocation&level=4,2
+        fetch("https://www.dnd5eapi.co/graphql", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify({
+                query,
+            })
+        }).then(response => {
+            return response.json();
+
+        }).then(data => {
+            console.log(data);
+        });
+
+}
+
+function test(data)
+{
+    console.log(data[0]);
+}
 
 function buttonClicked(){
     console.log("ButtonClicked");
