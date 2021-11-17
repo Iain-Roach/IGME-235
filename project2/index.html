@@ -11,59 +11,64 @@
 <body>
     <header><h1>D&D Spell Book</h1></header>
 
-    <div>
+    <div id="widget">
+    <div class="wid">
         <label for="options">Additional Options</label>
-    <input id="options" type="checkbox" name="extraOptions" value="options">
+        <input id="options" type="checkbox" name="extraOptions" value="options">
+        <div id="additionalOptions">
+            <div>
+                <label for="levelSort">Sort by Level:</label>
+            <select id="levelSort">
+                <option value="base">Level</option>
+                <option value="0">Cantrip</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+            </select>
+        </div>
+        
+        
+        <div>
+                <label for="schoolSort">Sort by School:</label>
+                <select id="schoolSort">
+                    <option value="base">School</option>
+                    <option value="abjuration">Abjuration</option>
+                    <option value="conjuration">Conjuration</option>
+                    <option value="divination">Divination</option>
+                    <option value="enchantment">Enchantment</option>
+                    <option value="evocation">Evocation</option>
+                    <option value="illusion">Illusion</option>
+                    <option value="necromancy">Necromancy</option>
+                    <option value="transmutation">Transmutation</option>
+                </select>
+        </div>
+        </div>
+    </div>
+    <div class="wid">
+        <button type="button" id="testButton" class="red">Test API</button>
+        <input id="spellTerm" type="text" size="20" maxlength="20" autofocus value="">
+    </div>
     </div>
 
-<div id="additionalOptions">
-    <div>
-        <label for="levelSort">Sort by Level:</label>
-    <select id="levelSort">
-        <option value="base">Level</option>
-        <option value="0">Cantrip</option>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-        <option value="8">8</option>
-        <option value="9">9</option>
-    </select>
-</div>
 
 
-<div>
-        <label for="schoolSort">Sort by School:</label>
-        <select id="schoolSort">
-            <option value="base">School</option>
-            <option value="abjuration">Abjuration</option>
-            <option value="conjuration">Conjuration</option>
-            <option value="divination">Divination</option>
-            <option value="enchantment">Enchantment</option>
-            <option value="evocation">Evocation</option>
-            <option value="illusion">Illusion</option>
-            <option value="necromancy">Necromancy</option>
-            <option value="transmutation">Transmutation</option>
-        </select>
-</div>
+    
+
+    
+<div id="status">
+Search for some spells :)
 </div>
 
     
-
-    <button type="button" id="testButton" class="red">Test API</button>
-    <input id="spellTerm" type="text" size="20" maxlength="20" autofocus value="">
-
     
-    
-
-    
-    
-
+    <hr>
     <section id="spellSlot"></section>
-    </section>
 
 
 
