@@ -14,7 +14,7 @@
 // STEP 3: create SpellCard list from the resulting spellArray
 // Components can go die ;)
 // Step 4 PROFIT
-
+let science;
 
 const schoolKey = "#schoolSort";
 const levelKey = "#levelSort";
@@ -136,6 +136,7 @@ function dataLoaded(e) {
         
         //Need to get spellData from the list and addToSpellArray
         getSpell(BASE_URL + result.index);
+        //Create spell Array here not in getSpell -.-
     }
 
     // Populate the spellCards on the screen
@@ -143,7 +144,9 @@ function dataLoaded(e) {
     createSpellBook();
 
     // Await funciton??
+
     createSpellCards(spellArray);
+    
 
 
     // Issue to ask professor *urgent*
@@ -277,7 +280,7 @@ function spellLoaded(e)
         console.log("No Spell Found");
         return;
     }
-    console.log("Adding spell to spellArray: " + obj);
+    //console.log("Adding spell to spellArray: " + obj.index);
     addToSpellArray(obj);
 }
 
@@ -285,7 +288,7 @@ function spellLoaded(e)
 function createSpellCards(array)
 {
     //Creates a spellCard for each item in spellArray
-    array[0].name = "test";
+    console.log(array[0]);
     for(let i = 0; i < array.length; i++)
     {
         console.log("Creating spell card for: " + array[i].name);
@@ -353,7 +356,7 @@ function createSpellCards(array)
 
     let description = document.createElement('p');
     description.className = "description";
-    description.innerHTML = obj.desc;
+    description.innerHTML = array[i].desc;
     card.appendChild(description);
           
     }   

@@ -1,3 +1,21 @@
+* {
+    margin: .5em;
+}
+
+header {
+    text-align: center;
+}
+
+#widgets{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: auto;
+}
+.wid {
+    width: 500px;
+}
+
 button{
     display : inline-block;
     cursor : pointer;
