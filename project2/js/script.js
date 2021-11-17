@@ -64,8 +64,8 @@ function testGraphQL()
 {
     console.log("testing graphql");
     const query = `
-        query {
-            spells(limit: 319, filter: { level: 2 }) {
+        query ($level: Float) {
+            spells(limit: 319, filter: { level: $level }) {
                 name
                 level
                 school {
@@ -88,19 +88,28 @@ function testGraphQL()
             },
             body: JSON.stringify({
                 query,
+                variables: {
+                    level: 2
+                }
             })
         }).then(response => {
             return response.json();
 
         }).then(data => {
-            console.log(data);
-        });
+            console.log(data.data.spells[0]);
+            spellArray = data.data.spells;
 
+            //While within this zone I can use spellArray and its complete :O
+
+
+            test(spellArray);
+        });     
+        //test();
 }
 
-function test(data)
+function test(array)
 {
-    console.log(data[0]);
+    console.log(array);
 }
 
 function buttonClicked(){
