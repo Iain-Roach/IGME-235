@@ -5,21 +5,25 @@
 // Spell array seems to be in order?
 // Single searching works now need to add sorting logic can easily use spell array :)
 
+// 11/16/2021
+// I want to die
+// I can use url string to sort through JSON results -.- api/spells/?school=Evocation&level=4,2
+// basically new code now
+// STEP 1: create URL using options plus input
+// STEP 2: create SpellArray from the resulting JSON file
+// STEP 3: create SpellCard list from the resulting spellArray
+// Components can go die ;)
+// Step 4 PROFIT
 
 
-
-const compKey = ".componentSearch";
+const schoolKey = "#schoolSort";
 const levelKey = "#levelSort";
-const concentrationKey = "#concentration";
+
 
 
 let spellSortIndex = 0;
 let spellArray = [];
 
-let compSelected = false
-let concentrationTest = false;
-let levelSelected = false;
-let cantripSelected = false;
 let term;
 let arrayCreated = false;
 
@@ -28,12 +32,11 @@ const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
 window.onload = (e) => {
 document.querySelector("#testButton").onclick = buttonClicked
 
-getData(BASE_URL);
+//getData(BASE_URL);
 createSpellBook();
 
-componentList = document.querySelectorAll(compKey);
 levelSelect = document.querySelector(levelKey);
-concentrationCheck = document.querySelector(concentrationKey);
+schoolSelect = document.querySelector(schoolKey);
 
 let testOptions = document.querySelector("#options");
 testOptions.checked = true;
@@ -59,8 +62,10 @@ let displayTerm = "";
 function buttonClicked(){
     console.log("ButtonClicked");
 
-    
+    // Resets URL
     let url = BASE_URL;
+    displayTerm = "";
+
     term = document.querySelector("#spellTerm").value;
     displayTerm = term;
 
@@ -73,39 +78,22 @@ function buttonClicked(){
     //if(term.length < 1) 
     //return;
 
-    url += term;
+    term = encodeURIComponent(term);
+    url += "?name=" + term;
 
-    console.log(url);
-
-    //Checks to see if any of the components have been selected
-    compSelected = false;
-    for(let i = 0; i < componentList.length; i++)
-    {
-        if (componentList[i].checked)
-        {
-            compSelected = true;
-        }
-    }
-
-    //Checks to see if any levels are selected
-    levelSelected = false;
-    cantripSelected = false;
-    
+    //Checks to see if a level has been selected
     if(levelSelect.value != "base")
     {
-        levelSelected = true;
-        if(levelSelect.value == "cantrip")
-        {
-            cantripSelected = true;
-        }
+        url += "&level=" + levelSelect.value;
     }
 
-    concentrationTest = false;
-    if(concentrationCheck.checked)
+
+    if(schoolSelect.value != "base")
     {
-        concentrationTest = true;
+        url += "&school=" + schoolSelect.value;
     }
 
+    console.log(url);
     getData(url);
 }
 
@@ -121,6 +109,9 @@ function getData(url) {
 }
 
 function dataLoaded(e) {
+    //Clear Spell Array
+    console.log("setting spellArray to zero");
+    spellArray.length = 0;
     //let spellList = document.querySelector("#spellList")
     //    spellList.remove();
 
@@ -130,185 +121,47 @@ function dataLoaded(e) {
 
     let obj = JSON.parse(xhr.responseText);
 
-    if(!obj)
+    //if there was no found results
+    if(obj.results.length <= 0)
     {
-        console.log("error");
+        console.log("No results found");
         return;
     }
 
-    if(obj.results && arrayCreated == false)
+    //Next create spellArray with the given results
+    let results = obj.results;
+    for(let i = 0; i < results.length; i++)
     {
-        document.querySelector("#spellList").remove();
-        createSpellBook();
-        let results = obj.results;
-        for(let i = 0; i < results.length; i++)
-        {
-            let result = results[i];
-
-            //smallURL is the index of the spell
-            let smallURL = result.index;
-            if(!smallURL) smallURL = "N/A";
-
-            let spellURL = BASE_URL + smallURL;
-
-            getSpell(spellURL);
-        }
+        let result = results[i];
         
+        //Need to get spellData from the list and addToSpellArray
+        getSpell(BASE_URL + result.index);
     }
-    else if(obj.results && arrayCreated == true)
-    {
-        document.querySelector("#spellList").remove();
-        createSpellBook();
 
-        for(let i = 0; i < spellArray.length; i++)
-        {
-            createSpellCard(spellArray[i]);
-        }
-    }
-    else if (!levelSelected && !compSelected && !concentrationTest && obj.name) {
-        //console.log(obj);
-        document.querySelector("#spellList").remove();
-        createSpellBook();
-        console.log(term);
-        let index = -1 // -1 if not found
-        for(let i = 0; i < spellArray.length; i++)
-        {
-            let element = spellArray[i];
-            if (element.index == term)
-            {
-                index = i;
-                break;
-            }
-        }
-        console.log(spellArray[index]);
-        createSpellCard(spellArray[index], true);
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////
+    // Populate the spellCards on the screen
+    document.querySelector("#spellList").remove();
+    createSpellBook();
 
-    //At base create a spell book with all items
-    // if(obj.results)
+    // Await funciton??
+    createSpellCards(spellArray);
+
+
+    // Issue to ask professor *urgent*
+    // Why when I pass my array to my function console.log shows values but I can't access them via code I used to be able to
+
+
+
+
+    // if(obj.results && arrayCreated == true)
     // {
+    //     document.querySelector("#spellList").remove();
     //     createSpellBook();
-    //     console.log("TEST");
-    //     let results = obj.results;
-    //     //Loop through this for each item and create a new spellcard div
-    //     for (let i=0; i< results.length; i++)
+
+    //     for(let i = 0; i < spellArray.length; i++)
     //     {
-    //         let result = results[i];
-
-    //         //smallURL is the index to add to the base url for the spell
-    //         let smallURL = result.index;
-    //         if(!smallURL) smallURL = "N/A";
-
-    //         let spellURL = BASE_URL + smallURL;
-            
-    //         createSpellCard(i);
-
-    //         let request = new XMLHttpRequest();
-    //         request.open("GET", spellURL);
-    //         request.onreadystatechange = function() {
-    //             if(request.readyState === XMLHttpRequest.DONE && request.status === 200)
-    //             {
-    //                 let data = JSON.parse(request.responseText);
-
-    //                 //spellArray.push(data);
-
-    //                 //Change spellCard data here
-    //                 let name = document.querySelectorAll(".spellName");
-    //                 name[i].innerHTML = data.name;
-
-    //                 //name[i].innerHTML = spellArray[i].name;
-
-    //                 let level = document.querySelectorAll(".spellLevel");
-    //                 if(data.level != 0)
-    //                 {
-    //                 let suffix = suffixify(data.level);
-    //                 level[i].innerHTML = data.level + suffix + " level " + data.school.name;
-    //                 }
-    //                 else
-    //                 {
-    //                     level[i].innerHTML = data.school.name + " Cantrip";
-    //                 }
-
-    //                 let castingTime = document.querySelectorAll(".castingTime");
-    //                 castingTime[i].innerHTML = data.casting_time;
-
-    //                 let range = document.querySelectorAll(".range");
-    //                 range[i].innerHTML = "Range: " + data.range;
-
-    //                 let duration = document.querySelectorAll(".duration");
-    //                 if(data.concentration)
-    //                 {
-    //                     duration[i].innerHTML = "Concentration " + data.duration;
-    //                 }
-    //                 else
-    //                 {
-    //                     duration[i].innerHTML = data.duration;
-    //                 }
-
-    //                 let componentsTest = document.querySelectorAll(".components");
-    //                 let compString = "Components: ";
-    //                 data.components.forEach(component => compString += component + " ");
-    //                 componentsTest[i].innerHTML = compString;
-
-    //                 let description = document.querySelectorAll(".description");
-    //                 description[i].innerHTML = data.desc;
-    //             }
-    //         }
-    //         request.send();
+    //         createSpellCard(spellArray[i]);
     //     }
- 
     // }
-
-    //If the JSON list doesn't have a results parameter searching for a specific spell
-    // if(!obj.results || obj.results.length == 0)
-    // {
-    //     //Means you are searching for a specific spell
-    //     //Remove current card list
-    //     createSpellBook();
-    //     createSpellCard(0);
-        
-    //                 let name = document.querySelector(".spellName");
-    //                 name.innerHTML = obj.name;
-
-    //                 let level = document.querySelector(".spellLevel");
-    //                 if(obj.level != 0)
-    //                 {
-    //                 let suffix = suffixify(obj.level);
-    //                 level.innerHTML = obj.level + suffix + " level " + obj.school.name;
-    //                 }
-    //                 else
-    //                 {
-    //                     level.innerHTML = obj.school.name + " Cantrip";
-    //                 }
-
-    //                 let castingTime = document.querySelector(".castingTime");
-    //                 castingTime.innerHTML = obj.casting_time;
-
-    //                 let range = document.querySelector(".range");
-    //                 range.innerHTML = "Range: " + obj.range;
-
-    //                 let duration = document.querySelector(".duration");
-    //                 if(obj.concentration)
-    //                 {
-    //                     duration.innerHTML = "Concentration " + obj.duration;
-    //                 }
-    //                 else
-    //                 {
-    //                     duration.innerHTML = obj.duration;
-    //                 }
-
-    //                 let componentsTest = document.querySelector(".components");
-    //                 let compString = "Components: ";
-    //                 obj.components.forEach(component => compString += component + " ");
-    //                 componentsTest.innerHTML = compString;
-
-    //                 let description = document.querySelector(".description");
-    //                 description.innerHTML = obj.desc;
-    //     return;
-    // }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
     //When actually working on this next week
     //Add a counter when making the spell cards while checking that spells parameters
@@ -317,13 +170,6 @@ function dataLoaded(e) {
     //Those with ceratin parameters
     //Might have to reorder things.
     //Now for some specific searching -.-
-    if(concentrationTest || levelSelected || compSelected)
-    {
-        console.log("one of the stuff has been selected");
-        console.log(concentrationTest);
-        console.log(levelSelected);
-        console.log(compSelected);
-    }
 
     //getSpell("https://www.dnd5eapi.co/api/spells/acid-arrow");
 
@@ -365,68 +211,48 @@ function createSpellBook()
     }
 }
 
-function createSpellCard(index)
-{
-    //Creates a div with all according inside elements
-    let card = document.createElement('div');
-    card.className = "spellCard";
-    document.getElementById("spellList").appendChild(card);
-
-    let cardHeader = document.createElement('div');
-    cardHeader.className = "spellHeader";
-    let cardList = document.getElementsByClassName("spellCard");
-    cardList[index].appendChild(cardHeader);
-
-    let spell = document.createElement('h3');
-    spell.className = "spellName";
-    spell.innerHTML = "obj.name";
-    let headerList = cardList[index].getElementsByClassName("spellHeader");
-    headerList[0].appendChild(spell);
-
-    let level = document.createElement('h4');
-    level.className = "spellLevel";
-    level.innerHTML = "Level Test";
-    headerList[0].appendChild(level);
-
-    let time = document.createElement('h4');
-    time.className = "castingTime";
-    time.innerHTML = "Casting Test";
-    headerList[0].appendChild(time);
-
-    let range = document.createElement('h4');
-    range.className = "range";
-    range.innerHTML = "Range Test";
-    headerList[0].appendChild(range);
-
-    let duration = document.createElement('h4');
-    duration.className = "duration";
-    duration.innerHTML = "Duration Test";
-    headerList[0].appendChild(duration);
-
-    let components = document.createElement('h4');
-    components.className = "components";
-    components.innerHTML = "Components: TEST";
-    headerList[0].appendChild(components);
-
-    let description = document.createElement('p');
-    description.className = "description";
-    description.innerHTML = "lorem ipsum lmao";
-    card.appendChild(description);
-}
-
 //WIP ---//
 //Step 1: on load of site use base URL to get spell index of everyspell
 //Step 2: use getSpell(url) to add spell to SpellArray
 //Step 3: use createSpellCard function and edit it to take a spellObj and create a spellCard
 
-function addToSpellArray(data) {
-    spellArray.push(data);
-    if(spellArray.length == 319)
-    {
-        arrayCreated = true;
-    }
+function createSpellArray(url)
+{
+    let xhr = new XMLHttpRequest();
+
+    xhr.onload = loadArray;
+
+    xhr.onerror = dataError;
+
+    xhr.open("GET", url);
+    xhr.send();
 }
 
+function loadArray(e)
+{
+    let xhr = e.target;
+    let obj = JSON.parse(xhr.responseText);
+
+    let results = obj.results;
+        for(let i = 0; i < results.length; i++)
+        {
+            let result = results[i];
+
+            //smallURL is the index of the spell
+            let smallURL = result.index;
+            if(!smallURL) smallURL = "N/A";
+
+            let spellURL = BASE_URL + smallURL;
+
+            getSpell(spellURL);
+        }
+}
+
+function addToSpellArray(data) {
+    spellArray.push(data);
+}
+
+//Takes URL of A spell and loads the spell
 function getSpell(url) {
     let spell = new XMLHttpRequest();
 
@@ -448,60 +274,47 @@ function spellLoaded(e)
 
     if(!obj)
     {
-        console.log("there was an error");
+        console.log("No Spell Found");
         return;
     }
-
-    //Add spell to spell array
-    if(!arrayCreated)
-    {
-        addToSpellArray(obj);
-    }
-    createSpellCard(obj);
+    console.log("Adding spell to spellArray: " + obj);
+    addToSpellArray(obj);
 }
 
 //Takes spellOBJ from spellArray and uses that spellArray index to create spellCards
-function createSpellCard(obj, single = false)
+function createSpellCards(array)
 {
+    //Creates a spellCard for each item in spellArray
+    array[0].name = "test";
+    for(let i = 0; i < array.length; i++)
+    {
+        console.log("Creating spell card for: " + array[i].name);
     let card = document.createElement('div');
     card.className = "spellCard";
-    document.getElementById("spellList").appendChild(card);
+    document.querySelector("#spellList").appendChild(card);
 
     let cardHeader = document.createElement('div');
     cardHeader.className = "spellHeader";
-    let cardList = document.getElementsByClassName("spellCard");
-    if(!single)
-    {
-        cardList[spellArray.indexOf(obj)].appendChild(cardHeader);
-    }
-    else
-    {
-        cardList[0].appendChild(cardHeader);
-    }
+    let cardList = document.querySelectorAll(".spellCard");
+    cardList[i].appendChild(cardHeader);
+    //cardList[0].appendChild(cardHeader);
+  
     
 
     let spell = document.createElement('h3');
     spell.className = "spellName";
-    spell.innerHTML = obj.name;
+    spell.innerHTML = array[i].name;
     let headerList;
-    if(!single)
-    {
-        headerList = cardList[spellArray.indexOf(obj)].getElementsByClassName("spellHeader");
-        headerList[0].appendChild(spell);
-    }
-    else
-    {
-        headerList = cardList[0].getElementsByClassName("spellHeader");
-        headerList[0].appendChild(spell);
-    }
+    headerList = cardList[i].querySelectorAll(".spellHeader");
+    headerList[0].appendChild(spell);
 
 
     let level = document.createElement('h4');
     level.className = "spellLevel";
-    if(obj.level != 0)
+    if(array[i].level != 0)
     {
-        let suffix = suffixify(obj.level);
-        level.innerHTML = obj.level + suffix + " level " + obj.school.name;
+        let suffix = suffixify(array[i].level);
+        level.innerHTML = array[i].level + suffix + " level " + array[i].school.name;
     }
     else
     {
@@ -542,4 +355,6 @@ function createSpellCard(obj, single = false)
     description.className = "description";
     description.innerHTML = obj.desc;
     card.appendChild(description);
+          
+    }   
 }
