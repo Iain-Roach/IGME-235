@@ -115,10 +115,12 @@ footer {
     flex: 0 0 375px;
     flex-flow: row wrap;
     height: 375px;
+    width: 375px;
     margin: 5px;
     margin-top: 20px;
     margin-bottom: 20px;
     background-color: #686868;
+    padding: 0px;
 } 
 
 #grad {

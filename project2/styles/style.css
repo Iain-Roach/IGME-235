@@ -6,14 +6,29 @@ header {
     text-align: center;
 }
 
-#widgets{
+#widget{
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin: auto;
+    border: 1px solid black;
+    height: 130px;
+    
 }
 .wid {
-    width: 500px;
+    flex: 1;
+}
+
+#status
+{
+    text-align: center;
+}
+
+#search
+{
+    display: flex;
+    align-items: center;
+}
+
+#search input{
+    flex: 1;
 }
 
 button{
