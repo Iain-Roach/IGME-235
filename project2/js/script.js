@@ -29,6 +29,7 @@ let arrayCreated = false;
 
 const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
 
+let selectedLevel = 1;
 window.onload = (e) => {
 //document.querySelector("#testButton").onclick = buttonClicked
 document.querySelector("#testButton").onclick = testGraphQL;
@@ -62,6 +63,10 @@ let displayTerm = "";
 
 function testGraphQL()
 {
+    if(levelSelect.value != "base")
+    {
+        selectedLevel = parseInt(levelSelect.value);
+    }
     document.querySelector("#spellList").remove();
          createSpellBook();
     console.log("testing graphql");
@@ -92,7 +97,7 @@ function testGraphQL()
             body: JSON.stringify({
                 query: query,
                 variables: {
-                    level: 2
+                    level: selectedLevel
                 }
             })
         }).then(response => {
@@ -100,7 +105,7 @@ function testGraphQL()
 
         }).then(data => {
             //data.data.spells is the array
-            console.log(data.data.spells[0]);
+            //console.log(data.data.spells[0]);
             spellArray = data.data.spells;
 
             //While within this zone I can use spellArray and its complete :O
@@ -346,10 +351,10 @@ function spellLoaded(e)
 function createSpellCards(array)
 {
     //Creates a spellCard for each item in spellArray
-    console.log(array[0]);
+    //console.log(array[0]);
     for(let i = 0; i < array.length; i++)
     {
-        console.log("Creating spell card for: " + array[i].name);
+        //console.log("Creating spell card for: " + array[i].name);
     let card = document.createElement('div');
     card.className = "spellCard";
     document.querySelector("#spellList").appendChild(card);
@@ -379,7 +384,7 @@ function createSpellCards(array)
     }
     else
     {
-        level.innerHTML = obj.school.name + " Cantrip";
+        level.innerHTML = array[i].school.name + " Cantrip";
     }
     headerList[0].appendChild(level);
 
