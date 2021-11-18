@@ -13,7 +13,7 @@
 
     <div id="widget">
     <div class="wid">
-        <label for="options">Additional Options</label>
+        <label for="options">Additional Options:</label>
         <input id="options" type="checkbox" name="extraOptions" value="options">
         <div id="additionalOptions">
             <div>
@@ -36,23 +36,24 @@
         <div>
                 <label for="schoolSort">Sort by School:</label>
                 <select id="schoolSort">
-                    <option value="base">School</option>
-                    <option value="abjuration">Abjuration</option>
-                    <option value="conjuration">Conjuration</option>
-                    <option value="divination">Divination</option>
-                    <option value="enchantment">Enchantment</option>
-                    <option value="evocation">Evocation</option>
-                    <option value="illusion">Illusion</option>
-                    <option value="necromancy">Necromancy</option>
-                    <option value="transmutation">Transmutation</option>
+                    <option value="base" >--------------------</option>
+                    <option value="Abjuration">Abjuration</option>
+                    <option value="Conjuration">Conjuration</option>
+                    <option value="Divination">Divination</option>
+                    <option value="Enchantment">Enchantment</option>
+                    <option value="Evocation">Evocation</option>
+                    <option value="Illusion">Illusion</option>
+                    <option value="Necromancy">Necromancy</option>
+                    <option value="Transmutation">Transmutation</option>
                 </select>
         </div>
         </div>
     </div>
     <div class="wid">
         <div id="search">
+            <label for="spellTerm">Name:</label>
             <input id="spellTerm" type="text" size="20" maxlength="20" autofocus value="">
-            <button type="button" id="testButton" class="red">Test API</button></div>
+            <button type="button" id="testButton" class="red">Search</button></div>
     </div>
     </div>
 
@@ -62,7 +63,7 @@
 
     
 <div id="status">
-<h3>Search for some spells :)</h3>
+<h3 id="statusText">Search for some spells :)</h3>
 </div>
 
     

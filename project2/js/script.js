@@ -14,12 +14,19 @@
 // STEP 3: create SpellCard list from the resulting spellArray
 // Components can go die ;)
 // Step 4 PROFIT
-let science;
+//const schoolKey = "#schoolSort";
+//const levelKey = "#levelSort";
 
-const schoolKey = "#schoolSort";
-const levelKey = "#levelSort";
+//For localStorage
+const prefix = "ijr8454-";
+const searchKey = prefix + "search";
+const schoolKey = prefix + "school";
+const levelKey = prefix + "level";
 
 
+const storedSearch = localStorage.getItem(searchKey);
+const storedSchool = localStorage.getItem(schoolKey);
+const storedLevel = localStorage.getItem(levelKey);
 
 let spellSortIndex = 0;
 let spellArray = [];
@@ -30,107 +37,218 @@ let arrayCreated = false;
 const BASE_URL = "https://www.dnd5eapi.co/api/spells/";
 
 let selectedLevel = 1;
+let selectedSchool = "";
+let termSelected = false;
+let selectedTerm = "";
+
 window.onload = (e) => {
-//document.querySelector("#testButton").onclick = buttonClicked
-document.querySelector("#testButton").onclick = testGraphQL;
+    const searchField = document.querySelector("#spellTerm");
+    const levelField = document.querySelector("#levelSort");
+    const schoolField = document.querySelector("#schoolSort");
 
-//getData(BASE_URL);
-createSpellBook();
+    if (storedSearch) {
+        searchField.value = storedSearch;
+    } else {
+        searchField.value = "";
+    }
+    if (storedSchool) {
+        schoolField.querySelector(`option[value='${storedSchool}']`).selected = true;
+    }
+    if(storedLevel) {
+        levelField.querySelector(`option[value='${storedLevel}']`).selected = true;
+    }
 
-levelSelect = document.querySelector(levelKey);
-schoolSelect = document.querySelector(schoolKey);
+    document.querySelector("#testButton").onclick = testGraphQL;
 
-let testOptions = document.querySelector("#options");
-testOptions.checked = true;
+    createSpellBook();
 
+    levelSelect = document.querySelector("#levelSort");
+    schoolSelect = document.querySelector("#schoolSort");
 
+    let testOptions = document.querySelector("#options");
+    testOptions.checked = false;
+    document.querySelector("#additionalOptions").hidden = true;
 
- testOptions.onchange = e => {
-     if(testOptions.checked)
-     {
-         document.querySelector("#additionalOptions").hidden = false;
+    testOptions.onchange = e => {
+        if (testOptions.checked) {
+            document.querySelector("#additionalOptions").hidden = false;
 
-     }
-     else{
-         document.querySelector("#additionalOptions").hidden = true;
-     }
-    
-     }
+        }
+        else {
+            document.querySelector("#additionalOptions").hidden = true;
+        }
+
+    }
+
+    searchField.onchange = e=> {localStorage.setItem(searchKey, e.target.value); };
+    levelField.onchange = e=> {localStorage.setItem(levelKey, e.target.value); };
+    schoolField.onchange = e=> {localStorage.setItem(schoolKey, e.target.value); };
+
+    testGraphQL();
 }
 
 
 let displayTerm = "";
 
-function testGraphQL()
-{
-    if(levelSelect.value != "base")
-    {
+function testGraphQL() {
+    document.querySelector("#statusText").innerHTML = "Searching the spellbook";
+    selectedTerm = getSpellTerm();
+    if (schoolSelect.value != "base") {
+        selectedSchool = schoolSelect.value;
+    }
+    if (levelSelect.value != "base") {
         selectedLevel = parseInt(levelSelect.value);
     }
     document.querySelector("#spellList").remove();
-         createSpellBook();
+    createSpellBook();
     console.log("testing graphql");
-    const query = `
-        query ($level: Float) {
-            spells(limit: 319, filter: { level: $level }) {
-                name
-                level
-                school {
+    let query = `
+            query ($level: Float) {
+                spells(limit: 319, filter: { level: $level }) {
                     name
+                    level
+                    school {
+                        name
+                    }
+                    casting_time
+                    range
+                    duration
+                    components
+                    desc
                 }
-                casting_time
-                range
-                duration
-                components
-                desc
             }
-        }
-    `;
-    //https://graphql.org/learn/queries/ use alisases above to allow for filtering
-    // when not looking for only level
-        fetch("https://www.dnd5eapi.co/graphql", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-            },
-            body: JSON.stringify({
-                query: query,
-                variables: {
-                    level: selectedLevel
-                }
-            })
-        }).then(response => {
-            return response.json();
-
-        }).then(data => {
-            //data.data.spells is the array
-            //console.log(data.data.spells[0]);
-            spellArray = data.data.spells;
-
-            //While within this zone I can use spellArray and its complete :O
-            createSpellCards(spellArray);
-        });     
-        //test();
-}
-
-function test(array)
-{
-    for(let i = 0; i < array.length; i++)
-    {
-        console.log(array[i].name);
+        `;
+    if (schoolSelect.value != "base") {
+        query = `query ($level: Float, $schoolName: String) {
+                        spells(limit: 319, filter: { AND: [{ school: { name: $schoolName } }, { level: $level }] }) {
+                            name
+                            level
+                            school {
+                                name
+                            }
+                            casting_time
+                            range
+                            duration
+                            components
+                            desc
+                        }
+                    }
+                `;
     }
+    //level plus index chosen
+    if (term) {
+        console.log(selectedTerm);
+        query = `
+            query ($level: Float, $index: String) {
+                spells(limit: 319, filter: { AND: [{index: $index}, {level: $level}] }) {
+                    name
+                    level
+                    school {
+                        name
+                    }
+                    casting_time
+                    range
+                    duration
+                    components
+                    desc
+                }
+            }
+        `;
+    }
+    let testOptions = document.querySelector("#options");
+    if (!testOptions.checked && !term) {
+        query = `
+            query {
+                spells(limit: 319) {
+                    name
+                    level
+                    school {
+                        name
+                    }
+                    casting_time
+                    range
+                    duration
+                    components
+                    desc
+                }
+            }
+        `;
+    } else if (!testOptions.checked && term) {
+
+        query = `
+            query ($index: String) {
+                spells(limit: 319, filter: {index: $index} ) {
+                    name
+                    level
+                    school {
+                        name
+                    }
+                    casting_time
+                    range
+                    duration
+                    components
+                    desc
+                }
+            }
+        `;
+    }
+    //Now if school and name are changed
+    if (term && schoolSelect.value != "base") {
+        query = `query ($level: Float, $schoolName: String, $index: String) {
+                spells(limit: 319, filter: { AND: [{ school: { name: $schoolName } }, { level: $level }, {index: $index}] }) {
+                    name
+                    level
+                    school {
+                        name
+                    }
+                    casting_time
+                    range
+                    duration
+                    components
+                    desc
+                }
+            }
+        `;
+    }
+    queryFetch(query).then(data => {
+        //data.data.spells is the array
+        spellArray = data.data.spells;
+
+        //While within this zone I can use spellArray and its complete :O
+        createSpellCards(spellArray);
+        if(spellArray.length == 0)
+        {
+            document.querySelector("#statusText").innerHTML = "No spells found - make sure you've spelled the spell correctly";
+        }
+        else
+        {
+            document.querySelector("#statusText").innerHTML = "Found " + spellArray.length + " spells matching your settings";
+        }
+    });
 }
 
-function buttonClicked(){
-    console.log("ButtonClicked");
+function queryFetch(query) {
+    return fetch("https://www.dnd5eapi.co/graphql", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        body: JSON.stringify({
+            query: query,
+            variables: {
+                level: selectedLevel,
+                schoolName: selectedSchool,
+                index: selectedTerm
+            }
+        })
+    }).then(res => res.json())
 
-    // Resets URL
-    let url = BASE_URL;
-    displayTerm = "";
+}
+
+function getSpellTerm() {
 
     term = document.querySelector("#spellTerm").value;
-    displayTerm = term;
 
     term = term.trim();
 
@@ -138,289 +256,106 @@ function buttonClicked(){
 
     term = term.replaceAll(' ', '-');
 
-    //if(term.length < 1) 
-    //return;
-
-    term = encodeURIComponent(term);
-    url += "?name=" + term;
-
-    //Checks to see if a level has been selected
-    if(levelSelect.value != "base")
-    {
-        url += "&level=" + levelSelect.value;
+    if (term.length >= 0) {
+        termSelected = true;
+        return term;
     }
-
-
-    if(schoolSelect.value != "base")
-    {
-        url += "&school=" + schoolSelect.value;
-    }
-
-    console.log(url);
-    getData(url);
+    return "";
 }
 
-function getData(url) {
-    let xhr = new XMLHttpRequest();
-
-    xhr.onload = dataLoaded;
-
-    xhr.onerror = dataError;
-
-    xhr.open("GET", url);
-    xhr.send();
-}
-
-function dataLoaded(e) {
-    //Clear Spell Array
-    console.log("setting spellArray to zero");
-    spellArray.length = 0;
-    //let spellList = document.querySelector("#spellList")
-    //    spellList.remove();
-
-    let xhr = e.target;
-
-    console.log(xhr.responseText);
-
-    let obj = JSON.parse(xhr.responseText);
-
-    //if there was no found results
-    if(obj.results.length <= 0)
-    {
-        console.log("No results found");
-        return;
-    }
-
-    //Next create spellArray with the given results
-    let results = obj.results;
-    for(let i = 0; i < results.length; i++)
-    {
-        let result = results[i];
-        
-        //Need to get spellData from the list and addToSpellArray
-        getSpell(BASE_URL + result.index);
-        //Create spell Array here not in getSpell -.-
-    }
-
-    // Populate the spellCards on the screen
-    document.querySelector("#spellList").remove();
-    createSpellBook();
-
-    // Await funciton??
-
-    createSpellCards(spellArray);
-    
-
-
-    // Issue to ask professor *urgent*
-    // Why when I pass my array to my function console.log shows values but I can't access them via code I used to be able to
-
-
-
-
-    // if(obj.results && arrayCreated == true)
-    // {
-    //     document.querySelector("#spellList").remove();
-    //     createSpellBook();
-
-    //     for(let i = 0; i < spellArray.length; i++)
-    //     {
-    //         createSpellCard(spellArray[i]);
-    //     }
-    // }
-
-    //When actually working on this next week
-    //Add a counter when making the spell cards while checking that spells parameters
-    //Save these to a list
-    //THen for searching through just create search function that only creates a spell card for
-    //Those with ceratin parameters
-    //Might have to reorder things.
-    //Now for some specific searching -.-
-
-    //getSpell("https://www.dnd5eapi.co/api/spells/acid-arrow");
-
-}
-
-function dataError(e) {
-    console.log("An error occured");
-}
-
-function suffixify(lvl)
-{
-    if(lvl == "1")
-    {
+function suffixify(lvl) {
+    if (lvl == "1") {
         return suffixNum = "st";
     }
-    else if(lvl == "2")
-    {
+    else if (lvl == "2") {
         return suffixNum = "nd";
     }
-    else if(lvl == "3")
-    {
+    else if (lvl == "3") {
         return suffixNum = "rd";
     }
-    else 
-    {
+    else {
         return suffixNum = "th";
     }
 }
 
 //creates location to put cards allows removal of #spelllist to reset card list
-function createSpellBook()
-{
-    if(!document.querySelector("#spellList"))
-    {
-    let spellBook = document.createElement('section');
-    spellBook.id = "spellList";
-    let location = document.querySelector("#spellSlot");
-    location.appendChild(spellBook);
+function createSpellBook() {
+    if (!document.querySelector("#spellList")) {
+        let spellBook = document.createElement('section');
+        spellBook.id = "spellList";
+        let location = document.querySelector("#spellSlot");
+        location.appendChild(spellBook);
     }
-}
-
-//WIP ---//
-//Step 1: on load of site use base URL to get spell index of everyspell
-//Step 2: use getSpell(url) to add spell to SpellArray
-//Step 3: use createSpellCard function and edit it to take a spellObj and create a spellCard
-
-function createSpellArray(url)
-{
-    let xhr = new XMLHttpRequest();
-
-    xhr.onload = loadArray;
-
-    xhr.onerror = dataError;
-
-    xhr.open("GET", url);
-    xhr.send();
-}
-
-function loadArray(e)
-{
-    let xhr = e.target;
-    let obj = JSON.parse(xhr.responseText);
-
-    let results = obj.results;
-        for(let i = 0; i < results.length; i++)
-        {
-            let result = results[i];
-
-            //smallURL is the index of the spell
-            let smallURL = result.index;
-            if(!smallURL) smallURL = "N/A";
-
-            let spellURL = BASE_URL + smallURL;
-
-            getSpell(spellURL);
-        }
-}
-
-function addToSpellArray(data) {
-    spellArray.push(data);
-}
-
-//Takes URL of A spell and loads the spell
-function getSpell(url) {
-    let spell = new XMLHttpRequest();
-
-    spell.onload = spellLoaded;
-
-    spell.onerror = dataError;
-
-    spell.open("GET", url);
-    spell.send();
-}
-
-function spellLoaded(e)
-{
-    let xhr = e.target;
-
-    //console.log(xhr.responseText);
-
-    let obj = JSON.parse(xhr.responseText);
-
-    if(!obj)
-    {
-        console.log("No Spell Found");
-        return;
-    }
-    //console.log("Adding spell to spellArray: " + obj.index);
-    addToSpellArray(obj);
 }
 
 //Takes spellOBJ from spellArray and uses that spellArray index to create spellCards
-function createSpellCards(array)
-{
+function createSpellCards(array) {
     //Creates a spellCard for each item in spellArray
     //console.log(array[0]);
-    for(let i = 0; i < array.length; i++)
-    {
+    for (let i = 0; i < array.length; i++) {
         //console.log("Creating spell card for: " + array[i].name);
-    let card = document.createElement('div');
-    card.className = "spellCard";
-    document.querySelector("#spellList").appendChild(card);
+        let card = document.createElement('div');
+        card.className = "spellCard";
+        document.querySelector("#spellList").appendChild(card);
 
-    let cardHeader = document.createElement('div');
-    cardHeader.className = "spellHeader";
-    let cardList = document.querySelectorAll(".spellCard");
-    cardList[i].appendChild(cardHeader);
-    //cardList[0].appendChild(cardHeader);
-  
-    
-
-    let spell = document.createElement('h3');
-    spell.className = "spellName";
-    spell.innerHTML = array[i].name;
-    let headerList;
-    headerList = cardList[i].querySelectorAll(".spellHeader");
-    headerList[0].appendChild(spell);
+        let cardHeader = document.createElement('div');
+        cardHeader.className = "spellHeader";
+        let cardList = document.querySelectorAll(".spellCard");
+        cardList[i].appendChild(cardHeader);
+        //cardList[0].appendChild(cardHeader);
 
 
-    let level = document.createElement('h4');
-    level.className = "spellLevel";
-    if(array[i].level != 0)
-    {
-        let suffix = suffixify(array[i].level);
-        level.innerHTML = array[i].level + suffix + " level " + array[i].school.name;
-    }
-    else
-    {
-        level.innerHTML = array[i].school.name + " Cantrip";
-    }
-    headerList[0].appendChild(level);
 
-    let time = document.createElement('h4');
-    time.className = "castingTime";
-    time.innerHTML = array[i].casting_time;
-    headerList[0].appendChild(time);
+        let spell = document.createElement('h3');
+        spell.className = "spellName";
+        spell.innerHTML = array[i].name;
+        let headerList;
+        headerList = cardList[i].querySelectorAll(".spellHeader");
+        headerList[0].appendChild(spell);
 
-    let range = document.createElement('h4');
-    range.className = "range";
-    range.innerHTML = array[i].range;
-    headerList[0].appendChild(range);
 
-    let duration = document.createElement('h4');
-    duration.className = "duration";
-    if(array[i].concentration)
-    {
-        duration.innerHTML = "Concentration " + array[i].duration;
-    }
-    else
-    {
-        duration.innerHTML = array[i].duration;
-    }
+        let level = document.createElement('h4');
+        level.className = "spellLevel";
+        if (array[i].level != 0) {
+            let suffix = suffixify(array[i].level);
+            level.innerHTML = array[i].level + suffix + " level " + array[i].school.name;
+        }
+        else {
+            level.innerHTML = array[i].school.name + " Cantrip";
+        }
+        headerList[0].appendChild(level);
+
+        let time = document.createElement('h4');
+        time.className = "castingTime";
+        time.innerHTML = array[i].casting_time;
+        headerList[0].appendChild(time);
+
+        let range = document.createElement('h4');
+        range.className = "range";
+        range.innerHTML = array[i].range;
+        headerList[0].appendChild(range);
+
+        let duration = document.createElement('h4');
+        duration.className = "duration";
+        if (array[i].concentration) {
+            duration.innerHTML = "Concentration " + array[i].duration;
+        }
+        else {
+            duration.innerHTML = array[i].duration;
+        }
         headerList[0].appendChild(duration);
 
-    let components = document.createElement('h4');
-    components.className = "components";
-    let compString = "Components: ";
-    array[i].components.forEach(component => compString += component + " ");
-    components.innerHTML = compString;
-    headerList[0].appendChild(components);
+        let components = document.createElement('h4');
+        components.className = "components";
+        let compString = "Components: ";
+        array[i].components.forEach(component => compString += component + " ");
+        components.innerHTML = compString;
+        headerList[0].appendChild(components);
 
-    let description = document.createElement('p');
-    description.className = "description";
-    description.innerHTML = array[i].desc;
-    card.appendChild(description);
-          
-    }   
+        let description = document.createElement('p');
+        description.className = "description";
+        description.innerHTML = array[i].desc;
+        card.appendChild(description);
+
+    }
 }
