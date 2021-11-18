@@ -101,7 +101,6 @@ function testGraphQL() {
     }
     document.querySelector("#spellList").remove();
     createSpellBook();
-    console.log("testing graphql");
     let query = `
             query ($level: Float) {
                 spells(limit: 319, filter: { level: $level }) {
@@ -137,7 +136,6 @@ function testGraphQL() {
     }
     //level plus index chosen
     if (term) {
-        console.log(selectedTerm);
         query = `
             query ($level: Float, $index: String) {
                 spells(limit: 319, filter: { AND: [{index: $index}, {level: $level}] }) {
@@ -291,9 +289,7 @@ function createSpellBook() {
 //Takes spellOBJ from spellArray and uses that spellArray index to create spellCards
 function createSpellCards(array) {
     //Creates a spellCard for each item in spellArray
-    //console.log(array[0]);
     for (let i = 0; i < array.length; i++) {
-        //console.log("Creating spell card for: " + array[i].name);
         let card = document.createElement('div');
         card.className = "spellCard";
         document.querySelector("#spellList").appendChild(card);
@@ -302,9 +298,6 @@ function createSpellCards(array) {
         cardHeader.className = "spellHeader";
         let cardList = document.querySelectorAll(".spellCard");
         cardList[i].appendChild(cardHeader);
-        //cardList[0].appendChild(cardHeader);
-
-
 
         let spell = document.createElement('h3');
         spell.className = "spellName";

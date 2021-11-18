@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,90 +9,69 @@
     <script src="js/script.js"></script>
     <link rel="stylesheet" type="text/css" href="styles/style.css">
 </head>
+
 <body>
-    <header><h1>D&D Spell Book</h1></header>
+    <div id="header">
+        <header>
+            <h1>D&D Spell Book</h1>
+            <h5><a href="media/documentation.pdf">Documentation</a></h6>
+        </header>
 
-    <div id="widget">
-    <div class="wid">
-        <label for="options">Additional Options:</label>
-        <input id="options" type="checkbox" name="extraOptions" value="options">
-        <div id="additionalOptions">
-            <div>
-                <label for="levelSort">Sort by Level:</label>
-            <select id="levelSort">
-                <option value="0">Cantrip</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-            </select>
+        <div id="widget">
+            <div class="wid">
+                <label for="options">Additional Options:</label>
+                <input id="options" type="checkbox" name="extraOptions" value="options">
+                <div id="additionalOptions">
+                    <div>
+                        <label for="levelSort">Sort by Level:</label>
+                        <select id="levelSort">
+                            <option value="0">Cantrip</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </div>
+
+
+                    <div>
+                        <label for="schoolSort">Sort by School:</label>
+                        <select id="schoolSort">
+                            <option value="base">--------------------</option>
+                            <option value="Abjuration">Abjuration</option>
+                            <option value="Conjuration">Conjuration</option>
+                            <option value="Divination">Divination</option>
+                            <option value="Enchantment">Enchantment</option>
+                            <option value="Evocation">Evocation</option>
+                            <option value="Illusion">Illusion</option>
+                            <option value="Necromancy">Necromancy</option>
+                            <option value="Transmutation">Transmutation</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="wid">
+                <div id="search">
+                    <label for="spellTerm">Name:</label>
+                    <input id="spellTerm" type="text" size="20" maxlength="20" autofocus value="">
+                    <button type="button" id="testButton" class="red">Search</button>
+                </div>
+            </div>
         </div>
-        
-        
-        <div>
-                <label for="schoolSort">Sort by School:</label>
-                <select id="schoolSort">
-                    <option value="base" >--------------------</option>
-                    <option value="Abjuration">Abjuration</option>
-                    <option value="Conjuration">Conjuration</option>
-                    <option value="Divination">Divination</option>
-                    <option value="Enchantment">Enchantment</option>
-                    <option value="Evocation">Evocation</option>
-                    <option value="Illusion">Illusion</option>
-                    <option value="Necromancy">Necromancy</option>
-                    <option value="Transmutation">Transmutation</option>
-                </select>
-        </div>
-        </div>
-    </div>
-    <div class="wid">
-        <div id="search">
-            <label for="spellTerm">Name:</label>
-            <input id="spellTerm" type="text" size="20" maxlength="20" autofocus value="">
-            <button type="button" id="testButton" class="red">Search</button></div>
-    </div>
+
+
+    <div id="status">
+        <h3 id="statusText">Search for some spells :)</h3>
     </div>
 
-
-
-    
-
-    
-<div id="status">
-<h3 id="statusText">Search for some spells :)</h3>
 </div>
-
-    
-    
-    <hr>
     <section id="spellSlot"></section>
 
-
-
-
-
-
-
-
-    
-    <!-- <div id="spellCard">
-        <div id="spellHeader">
-            <h3 id="spellName">TestSpell</h3>
-            <h4 id="spellLevel">'level' Level 'school'</h4>
-            <h4 id="castingTime">Casting Time: </h4>
-            <h4 id="range">Range: </h4>
-            <h4 id="duration">Duration: </h4>
-            <h4 id="components">Components: V S M</h4>
-        </div>
-        <p id="description">description</p>
-        Range, Components, Duration, Concentration, casting time, level, attack type
-    </div> -->
-
-
 </body>
+
 </html>
