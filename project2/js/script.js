@@ -62,6 +62,8 @@ let displayTerm = "";
 
 function testGraphQL()
 {
+    document.querySelector("#spellList").remove();
+         createSpellBook();
     console.log("testing graphql");
     const query = `
         query ($level: Float) {
@@ -79,7 +81,8 @@ function testGraphQL()
             }
         }
     `;
-    //api/spells/?school=Evocation&level=4,2
+    //https://graphql.org/learn/queries/ use alisases above to allow for filtering
+    // when not looking for only level
         fetch("https://www.dnd5eapi.co/graphql", {
             method: "POST",
             headers: {
@@ -87,7 +90,7 @@ function testGraphQL()
                 "Accept": "application/json",
             },
             body: JSON.stringify({
-                query,
+                query: query,
                 variables: {
                     level: 2
                 }
@@ -96,20 +99,22 @@ function testGraphQL()
             return response.json();
 
         }).then(data => {
+            //data.data.spells is the array
             console.log(data.data.spells[0]);
             spellArray = data.data.spells;
 
             //While within this zone I can use spellArray and its complete :O
-
-
-            test(spellArray);
+            createSpellCards(spellArray);
         });     
         //test();
 }
 
 function test(array)
 {
-    console.log(array);
+    for(let i = 0; i < array.length; i++)
+    {
+        console.log(array[i].name);
+    }
 }
 
 function buttonClicked(){
@@ -380,30 +385,30 @@ function createSpellCards(array)
 
     let time = document.createElement('h4');
     time.className = "castingTime";
-    time.innerHTML = obj.casting_time;
+    time.innerHTML = array[i].casting_time;
     headerList[0].appendChild(time);
 
     let range = document.createElement('h4');
     range.className = "range";
-    range.innerHTML = obj.range;
+    range.innerHTML = array[i].range;
     headerList[0].appendChild(range);
 
     let duration = document.createElement('h4');
     duration.className = "duration";
-    if(obj.concentration)
+    if(array[i].concentration)
     {
-        duration.innerHTML = "Concentration " + obj.duration;
+        duration.innerHTML = "Concentration " + array[i].duration;
     }
     else
     {
-        duration.innerHTML = obj.duration;
+        duration.innerHTML = array[i].duration;
     }
         headerList[0].appendChild(duration);
 
     let components = document.createElement('h4');
     components.className = "components";
     let compString = "Components: ";
-    obj.components.forEach(component => compString += component + " ");
+    array[i].components.forEach(component => compString += component + " ");
     components.innerHTML = compString;
     headerList[0].appendChild(components);
 
