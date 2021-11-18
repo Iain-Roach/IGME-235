@@ -1,21 +1,3 @@
-// 11/15/2021
-// Notes: spellArray not being created in order?
-// Might want to make it so onload instead of creating spellcards then just fill out spell array
-// then create spellCards from spellArray
-// Spell array seems to be in order?
-// Single searching works now need to add sorting logic can easily use spell array :)
-
-// 11/16/2021
-// I want to die
-// I can use url string to sort through JSON results -.- api/spells/?school=Evocation&level=4,2
-// basically new code now
-// STEP 1: create URL using options plus input
-// STEP 2: create SpellArray from the resulting JSON file
-// STEP 3: create SpellCard list from the resulting spellArray
-// Components can go die ;)
-// Step 4 PROFIT
-//const schoolKey = "#schoolSort";
-//const levelKey = "#levelSort";
 
 //For localStorage
 const prefix = "ijr8454-";
