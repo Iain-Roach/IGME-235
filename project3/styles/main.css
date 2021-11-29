@@ -85,7 +85,7 @@ span.bush {
 span.cell{
 	height:32px;
 	width:32px;
-	border: 1px solid #333; /* actual width & height is 32px because of border */
+	border: 0px solid #333; /* actual width & height is 32px because of border */
 	background-color: #ccc;
 	padding:0;
 	margin:0;
