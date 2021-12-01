@@ -1,13 +1,13 @@
 const gameworld = {
 
 	world00: [ 
-		[7,7,7,7,7,7,7,7,7,7,7,7,7,7,4,4,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
+		[7,7,7,7,7,7,7,7,7,7,7,7,7,7,5,5,7,7,7,7,7,7,7,7,7,7,7,7,7,7],
 		[7,6,6,6,6,6,6,6,6,6,6,6,6,6,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,7],
 		[7,6,6,6,6,6,6,6,6,6,6,6,6,6,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,7],
 		[7,6,6,6,6,2,2,2,6,6,6,6,6,6,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,7],
 		[7,6,6,6,2,7,7,7,2,6,6,6,6,6,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,7],
-		[7,6,6,2,7,7,7,7,7,2,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4],
-		[7,6,6,2,7,7,7,7,7,2,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,4],
+		[7,6,6,2,7,7,7,7,7,2,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],
+		[7,6,6,2,7,7,7,7,7,2,6,6,6,6,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5],
 		[7,6,6,2,7,7,7,7,7,2,6,6,6,6,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,7],
 		[7,6,6,6,2,7,7,7,2,6,6,6,6,6,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,7],
 		[7,6,6,6,6,2,2,2,6,6,6,6,6,6,5,5,6,6,6,6,6,6,6,6,6,6,2,2,2,7],
@@ -79,7 +79,8 @@ const cssClass = Object.freeze({
 	PLAYER: 	"player",
 	RING1: 		"ring1",
 	TREASURE1: 	"treasure1",
-	TREASURE2: 	"treasure2"
+	TREASURE2: 	"treasure2",
+	SCROLL: 	"scroll00"
 });
 
 const allGameObjects = {
@@ -93,7 +94,8 @@ const allGameObjects = {
 		{x:28, y:3,  type:"key",		className: cssClass.KEY1},
 		{x:17, y:5,  type:"treasure",	className: cssClass.TREASURE1},
 		{x:2,  y:17, type:"treasure",	className: cssClass.TREASURE2},
-		{x:10, y:16, type:"ring",		className: cssClass.RING1}
+		{x:10, y:16, type:"ring",		className: cssClass.RING1},
+		{x:16, y:12, type:"scroll", 	className: cssClass.SCROLL}
 	],
 	level10:[
 		
@@ -103,7 +105,7 @@ const allGameObjects = {
 	]
 }
 
-
+//Example of how to fill out level with gameObjects
 // level00:[
 // 	{x:16, y:18, type:"monster", 	className: cssClass.MONSTER1},
 // 	{x:12, y:18, type:"monster",	className: cssClass.MONSTER1},

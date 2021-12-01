@@ -9,8 +9,8 @@
 		// World nav variables
 		let worldX = 0;
 		let worldY = 0;
-		let playerWorldX = 0;
-		let playerWorldY = 0;
+		let playerWorldX = 14;
+		let playerWorldY = 13;
 
 		// faking an enumeration here
 		const keyboard = Object.freeze({
@@ -116,8 +116,8 @@
 			node.className = "gameObject";
 
 			// now initialize our player
-            player.x = 1;
-            player.y = 1;
+            player.x = playerWorldX;
+            player.y = playerWorldY;
 			player.element = node.cloneNode(true);
 			player.element.classList.add("player");
 			container.appendChild(player.element);
@@ -226,6 +226,20 @@
 					nextY = player.y - 1;
 					if (checkIsLegalMove(nextX, nextY)) player.moveUp();
 					break;
+
+				case keyboard.SPACE:
+					interact();
+					break;
+			}
+
+			function interact()
+			{
+				console.log("Space is pressed");
+				let interactList = allGameObjects["level00"].map(x => x["className"]);
+				console.log(interactList); 
+			
+
+				console.log(allGameObjects["level00"].find(x =>  x.className === cssClass.SCROLL));
 			}
 
 			function checkIsLegalMove(nextX, nextY) {
@@ -242,7 +256,7 @@
 					if(nextY == 0)
 					{
 						playerWorldX = player.x;
-						playerWorldY = 18;
+						playerWorldY = 19;
 						worldY += 1;
 						console.log("Hit top transfer zone");
 						console.log("Going to zone" + worldX + "|" + worldY);
@@ -252,7 +266,7 @@
 					else if(nextY == 19)
 					{
 						playerWorldX = player.x
-						playerWorldY = 1;
+						playerWorldY = 0;
 						worldY -= 1;
 						console.log("Hit bottom transfer zone");
 						console.log("Going to zone" + worldX + "|" + worldY);
@@ -262,7 +276,7 @@
 					else if(nextX == 29)
 					{
 						playerWorldY = player.y;
-						playerWorldX = 1;
+						playerWorldX = 0;
 						worldX += 1;
 						console.log("Hit right transfer zone");
 						console.log("Going to zone" + worldX + "|" + worldY);
@@ -272,7 +286,7 @@
 					else if(nextX == 0)
 					{
 						playerWorldY = player.y;
-						playerWorldX = 28;
+						playerWorldX = 29;
 						worldX -= 1;
 						console.log("Hit left transfer zone");
 						console.log("Going to zone" + worldX + "|" + worldY);
