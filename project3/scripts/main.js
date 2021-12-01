@@ -6,6 +6,12 @@
 		const container = document.querySelector("#gridContainer");
 		const cells = []; // the HTML elements - our "view"
 
+		// World nav variables
+		let worldX = 0;
+		let worldY = 0;
+		let playerWorldX = 0;
+		let playerWorldY = 0;
+
 		// faking an enumeration here
 		const keyboard = Object.freeze({
 			SHIFT: 16,
@@ -73,12 +79,12 @@
 			}
 		}
         function makeLevel() {
-			currentGameWorld = gameworld["world" + currentLevelNumber];
+			currentGameWorld = gameworld["world" + worldX + worldY];
 			let numCols = currentGameWorld[0].length;
 			let numRows = currentGameWorld.length;
 			createGridElements(numRows, numCols);
 			drawGrid(currentGameWorld);
-			loadLevel(currentLevelNumber);
+			loadLevel(worldX, worldY);
 			drawGameObjects(currentGameObjects);
 			effectAudio = document.querySelector("#effectAudio");
 			effectAudio.volume = 0.2;
@@ -87,16 +93,15 @@
 
         //Currently increments level by one and loads new level
         function NextLevel() {
-            currentLevelNumber += 1;
+            //currentLevelNumber += 1;
             document.querySelector("#gridContainer").innerHTML = "";
 
-            currentGameWorld = gameworld["world" + currentLevelNumber];
+            currentGameWorld = gameworld["world" + worldX + worldY];
 	        let numCols = currentGameWorld[0].length;
 	        let numRows = currentGameWorld.length;
 	        createGridElements(numRows,numCols);
-	        drawGrid(currentGameWorld);
-            
-	        loadLevel(currentLevelNumber);
+	        drawGrid(currentGameWorld);      
+	        loadLevel(worldX, worldY);
 	        drawGameObjects(currentGameObjects);
             effectAudio = document.querySelector("#effectAudio");
 		    effectAudio.volume = 0.2;
@@ -105,7 +110,7 @@
         }
 
 		// the elements on the screen that can move and change - also part of the "view"
-		function loadLevel(levelNum = 1) {
+		function loadLevel(wX, wY) {
 			currentGameObjects = []; // clear out the old array
 			const node = document.createElement("span");
 			node.className = "gameObject";
@@ -120,7 +125,7 @@
 
 			/* let's instantiate our game objects */
 			// pull the current level data
-			const levelObjects = allGameObjects["level" + levelNum];
+			const levelObjects = allGameObjects["level" + wX + wY];
 
 			// loop through this level's objects ... 
 			for (let obj of levelObjects) {
@@ -227,11 +232,51 @@
 				let nextTile = currentGameWorld[nextY][nextX];
 				if (nextTile != worldTile.WALL && nextTile != worldTile.WATER && nextTile != worldTile.BUSH) {
 
-					if (nextTile == worldTile.GROUND) {
-						console.log("Moved outside area");
+					// if (nextTile == worldTile.GROUND) {
+					// 	console.log("Moved outside area");
+					// 	NextLevel();
+                    //     //player.x = 1;
+                    //     //player.y = 1;
+					// }
+					//Exits top of screen
+					if(nextY == 0)
+					{
+						playerWorldX = player.x;
+						playerWorldY = 18;
+						worldY += 1;
+						console.log("Hit top transfer zone");
+						console.log("Going to zone" + worldX + "|" + worldY);
 						NextLevel();
-                        //player.x = 1;
-                        //player.y = 1;
+					}
+					//Exits bottom of screen
+					else if(nextY == 19)
+					{
+						playerWorldX = player.x
+						playerWorldY = 1;
+						worldY -= 1;
+						console.log("Hit bottom transfer zone");
+						console.log("Going to zone" + worldX + "|" + worldY);
+						NextLevel();
+					}
+					//Exits right of screen
+					else if(nextX == 29)
+					{
+						playerWorldY = player.y;
+						playerWorldX = 1;
+						worldX += 1;
+						console.log("Hit right transfer zone");
+						console.log("Going to zone" + worldX + "|" + worldY);
+						NextLevel();
+					}
+					//Exits left of screen
+					else if(nextX == 0)
+					{
+						playerWorldY = player.y;
+						playerWorldX = 28;
+						worldX -= 1;
+						console.log("Hit left transfer zone");
+						console.log("Going to zone" + worldX + "|" + worldY);
+						NextLevel();
 					}
 					return true;
 				}
