@@ -80,7 +80,8 @@ const cssClass = Object.freeze({
 	RING1: 		"ring1",
 	TREASURE1: 	"treasure1",
 	TREASURE2: 	"treasure2",
-	SCROLL: 	"scroll00"
+	SCROLL00: 	"scroll00",
+	BEE01:		"bee01"
 });
 
 const allGameObjects = {
@@ -95,13 +96,13 @@ const allGameObjects = {
 		{x:17, y:5,  type:"treasure",	className: cssClass.TREASURE1},
 		{x:2,  y:17, type:"treasure",	className: cssClass.TREASURE2},
 		{x:10, y:16, type:"ring",		className: cssClass.RING1},
-		{x:16, y:12, type:"scroll", 	className: cssClass.SCROLL}
+		{x:16, y:12, type:"scroll", 	className: cssClass.SCROLL00}
 	],
 	level10:[
 		
 	],
 	level01:[
-		
+		{x:5, y:5, type:"monster", 		className: cssClass.BEE01}
 	]
 }
 
