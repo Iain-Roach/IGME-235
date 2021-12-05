@@ -87,15 +87,7 @@ const cssClass = Object.freeze({
 const allGameObjects = {
 	// we aren't using .type yet
 	level00:[
-		{x:16, y:18, type:"monster", 	className: cssClass.MONSTER1},
-		{x:12, y:18, type:"monster",	className: cssClass.MONSTER1},
-		{x:25, y:15, type:"monster",	className: cssClass.MONSTER2},
 		{x:10, y:3,  type:"monster",	className: cssClass.MONSTER3},
-		{x:24, y:15, type:"chest",		className: cssClass.CHEST1},
-		{x:28, y:3,  type:"key",		className: cssClass.KEY1},
-		{x:17, y:5,  type:"treasure",	className: cssClass.TREASURE1},
-		{x:2,  y:17, type:"treasure",	className: cssClass.TREASURE2},
-		{x:10, y:16, type:"ring",		className: cssClass.RING1},
 		{x:16, y:12, type:"scroll", 	className: cssClass.SCROLL00}
 	],
 	level10:[

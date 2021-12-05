@@ -5,7 +5,7 @@ const cellWidth = 32;
 const cellSpacing = 0;
 const container = document.querySelector("#gridContainer");
 const cells = []; // the HTML elements - our "view"
-const enemies = []; // list of enemies in the level
+let enemies = []; // list of enemies in the level
 let player = new Player(1, 1, 100);
 
 // World nav variables
@@ -59,7 +59,7 @@ let playerY = player.y;
 
 // II. INIT code
 window.onload = () => {
-	makeLevel();
+	NextLevel();
 
 	//clearGameObjects();
 }
@@ -80,24 +80,22 @@ function createGridElements(numRows, numCols) {
 		}
 	}
 }
-function makeLevel() {
-	currentGameWorld = gameworld["world" + worldX + worldY];
-	let numCols = currentGameWorld[0].length;
-	let numRows = currentGameWorld.length;
-	createGridElements(numRows, numCols);
-	drawGrid(currentGameWorld);
-	loadLevel(worldX, worldY);
-	drawGameObjects(currentGameObjects);
-	effectAudio = document.querySelector("#effectAudio");
-	effectAudio.volume = 0.2;
-	setupEvents();
-}
+// function makeLevel() {
+// 	document.querySelector("#gridContainer").innerHTML = "";
+// 	currentGameWorld = gameworld["world" + worldX + worldY];
+// 	let numCols = currentGameWorld[0].length;
+// 	let numRows = currentGameWorld.length;
+// 	createGridElements(numRows, numCols);
+// 	drawGrid(currentGameWorld);
+// 	loadLevel(worldX, worldY);
+// 	drawGameObjects(currentGameObjects);
+// 	effectAudio = document.querySelector("#effectAudio");
+// 	effectAudio.volume = 0.2;
+// 	setupEvents();
+// }
 
-//Currently increments level by one and loads new level
 function NextLevel() {
-	//currentLevelNumber += 1;
 	document.querySelector("#gridContainer").innerHTML = "";
-
 	currentGameWorld = gameworld["world" + worldX + worldY];
 	let numCols = currentGameWorld[0].length;
 	let numRows = currentGameWorld.length;
@@ -114,6 +112,7 @@ function NextLevel() {
 // the elements on the screen that can move and change - also part of the "view"
 function loadLevel(wX, wY) {
 	currentGameObjects = []; // clear out the old array
+	enemies = []; // clear out old level's enemy array
 	const node = document.createElement("span");
 	node.className = "gameObject";
 
@@ -123,20 +122,79 @@ function loadLevel(wX, wY) {
 	player.element = node.cloneNode(true);
 	player.element.classList.add("player");
 	container.appendChild(player.element);
-
-
+	createEnemyList();
+	for(let e of enemies)
+	{
+		if(e.alive)
+		{
+		e.element = node.cloneNode(true);
+		e.element.classList.add(e.name);
+		container.appendChild(e.element);
+		}
+	}
+	
 	/* let's instantiate our game objects */
 	// pull the current level data
 	const levelObjects = allGameObjects["level" + wX + wY];
 
 	// loop through this level's objects ... 
 	for (let obj of levelObjects) {
+		if(obj.type != "monster")
+		{
 		const clone = Object.assign({}, obj); 		// clone the object
 		clone.element = node.cloneNode(true); 		// clone the element
 		clone.element.classList.add(obj.className); // add the className so we see the right image
 		currentGameObjects.push(clone);				// add to currentGameObjects array  (so it gets moved onto the map)
 		container.appendChild(clone.element);		// add to DOM tree (so we can see it!)
+		}
 	}
+	
+}
+
+// Called at end of battle to return to level
+function battleEnd()
+{
+	document.querySelector("#gridContainer").innerHTML = "";
+	let numCols = currentGameWorld[0].length;
+	let numRows = currentGameWorld.length;
+	createGridElements(numRows, numCols);
+	drawGrid(currentGameWorld);
+
+	container.appendChild(player.element);
+	for(let obj of currentGameObjects)
+	{
+		container.appendChild(obj.element);
+	}
+
+	for(let enemy of enemies)
+	{
+		if(enemy.alive)
+		{
+			container.appendChild(enemy.element);
+		}
+	}
+	drawGameObjects(currentGameObjects);
+	effectAudio = document.querySelector("#effectAudio");
+	effectAudio.volume = 0.2;
+	setupEvents();
+}
+
+// Creates a list of monsters from the currentGameObjects array
+function createEnemyList()
+{
+	for(let object of allGameObjects["level" + worldX + worldY])
+	{
+		if(object.type == "monster")
+		{
+			let enemy = new Monster(object.x, object.y, 20, object.className);
+			enemies.push(enemy);
+		}
+	}
+	// for(let i = 0; i< allGameObjects["level" + worldX + worldY].length; i++)
+	// {
+	// 	if(allGameObjects["level" + worldX + worldY][i].type == "monster")
+	// 	allGameObjects["level" + worldX + worldY].splice(i, 1);
+	// }
 }
 
 function drawGrid(array) {
@@ -196,6 +254,13 @@ function drawGameObjects(array) {
 	for (let gameObject of array) {
 		gameObject.element.style.left = `${gameObject.x * (cellWidth + cellSpacing)}px`;
 		gameObject.element.style.top = `${gameObject.y * (cellWidth + cellSpacing)}px`;
+	}
+
+	// enemies
+	for (let enemy of enemies)
+	{
+		enemy.element.style.left = `${enemy.x * (cellWidth + cellSpacing)}px`;
+		enemy.element.style.top = `${enemy.y * (cellWidth + cellSpacing)}px`;
 	}
 
 }
@@ -278,16 +343,26 @@ function movePlayer(e) {
 
 	function checkIsLegalMove(nextX, nextY) {
 		let nextTile = currentGameWorld[nextY][nextX];
-		for(let object of currentGameObjects)
-		{
-			if(object.x == nextX && object.y == nextY)
-			{
-				if(object.className == "bee01")
-				{
-					console.log("its a bee");
-				}
-			}
 
+		// for(let object of currentGameObjects)
+		// {
+		// 	if(object.x == nextX && object.y == nextY)
+		// 	{
+		// 		if(object.className == "bee01")
+		// 		{
+		// 			console.log("its a bee");
+		// 		}
+		// 	}
+
+		// }
+		for(let enemy of enemies)
+		{
+			if(enemy.x == nextX && enemy.y == nextY && enemy.alive)
+			{
+				playerWorldX = player.x;
+				playerWorldY = player.y;
+				battle(enemy);
+			}
 		}
 		if (nextTile != worldTile.WALL && nextTile != worldTile.WATER && nextTile != worldTile.BUSH) {
 
@@ -373,4 +448,68 @@ function gridClicked(e) {
 	let selectedCell = cells[row][col];
 	// selectedCell.classList.add('cellSelected');
 	console.log(`${col},${row}`);
+}
+
+function battle(enemy) {
+	console.log("Time to duel");
+	console.log(enemy.name);
+	createBattleScene(enemy);
+	
+}
+
+function createBattleScene(enemy)
+{
+	document.querySelector("#gridContainer").innerHTML = "";
+	let battleDiv = document.createElement("div");
+	battleDiv.id = "battleDiv";
+	container.appendChild(battleDiv);
+
+	let enemySide = document.createElement("div");
+	enemySide.id = "enemySide";
+	battleDiv.appendChild(enemySide);
+
+	let playerSide = document.createElement("div");
+	playerSide.id = "playerSide";
+	battleDiv.appendChild(playerSide);
+
+	let playerStats = document.createElement("div");
+	playerStats.id ="playerStats";
+	playerSide.appendChild(playerStats);
+
+	let playerOptions = document.createElement("div");
+	playerOptions.id = "playerOptions";
+	playerSide.appendChild(playerOptions);
+
+	let enemyImage = document.createElement("div");
+	enemyImage.id = "enemyImage";
+	enemyImage.style.backgroundPositionX = -2000;
+	enemySide.appendChild(enemyImage);
+
+
+	// Button to run from the battle
+	let leaveBattle = document.createElement("button");
+	leaveBattle.id = "leaveBattle";
+	leaveBattle.className = "button";
+	leaveBattle.innerHTML = "RUN";
+	leaveBattle.onclick = function (e) {
+		console.log("Run Button was Clicked");
+		//currentGameObjects.find(e => e.className == this.name)
+		//currentGameObjects = currentGameObjects.filter(e => e.className != this.name);
+		battleEnd();
+	}
+	playerOptions.appendChild(leaveBattle);
+	
+
+	// Button to attack
+	let attackButton = document.createElement("button");
+	attackButton.id = "attackButton";
+	attackButton.className = "button";
+	attackButton.innerHTML = "ATTACK";
+	attackButton.onclick = function (e) {
+		console.log("Attack Button Was Clicked")
+		enemy.takeDamage(10);
+		enemy.enemyTurn();
+	}
+	playerOptions.appendChild(attackButton)
+
 }

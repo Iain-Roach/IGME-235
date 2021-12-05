@@ -18,6 +18,12 @@ div#gridContainer{
 	z-index: 0; /* underneath everything */
 }
 
+#instructions {
+	position: absolute;
+	top: 5em;
+	left:1000px;
+	
+}
 
 /* Background Tile Styles */
 span.floor{
@@ -212,3 +218,72 @@ span.bee01 {
 	margin-left: 1rem;
 	margin-right: 1rem;
 }
+
+#battleDiv {
+	position: relative;
+	border: 1px solid black;
+	width: 960px;
+	height: 640px;
+	background-color: white;
+	
+}
+
+#enemySide {
+	display: flex;
+	border-bottom: 1px solid  black;
+	height: 50%;
+	width: 100%;
+	align-items: center;
+	justify-content: center;
+}
+
+#enemyImage {
+	border: 1px solid black;
+	width: 200px;
+	height: 200px;
+	background: url(../images/nethack-32x32.png);
+	background-size: 8000px;
+	background-position: -2000px 0px;
+}
+
+#playerSide {
+	display: grid;
+	height: 50%;
+	width: 100%;
+	grid-template-areas: "stats options";
+	grid-template-columns: 1fr 2fr;
+}
+
+#playerStats {
+	grid-area: stats;
+	border-right: 1px solid red;
+}
+
+#playerOptions {
+	grid-area: options;
+	border-left: 1px solid black;
+}
+
+.button {
+	padding: 14px 60px;
+	width: 200px;
+	font-size: 20px;
+	background-color: red;
+	border-radius: 12px;
+	transition-duration: 0.4s;
+	cursor: pointer;
+	box-shadow: 0 9px #999;
+
+}
+
+.button:hover {
+	background-color: white;
+	color: black;
+}
+
+.button:active {
+	background-color: rgb(rgb(189, 0, 0), green, blue);
+	box-shadow: 0 5px #666;
+	transform: translateY(4px);
+}
+
