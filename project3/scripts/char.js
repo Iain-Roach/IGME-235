@@ -4,6 +4,10 @@ class Player {
         this.y = y;
         this.health = health;
         this.element = element;
+        this.attack = 10;
+        this.magic = 15;
+        this.faith = 10;
+        this.inventory = [];
     }
 
     // Gets the player's x and y coords
@@ -15,6 +19,38 @@ class Player {
         return this.y;
     }
 
+    get Health() {
+        return this.health;
+    }
+    set Health(val) {
+        this.health = val;
+    }
+
+    get Attack() {
+        return this.attack;
+    }
+    set Attack(val) {
+        this.attack = val;
+    }
+
+    get Magic() {
+        return this.magic;
+    }
+    set Magic(val) {
+        this.magic = val;
+    }
+
+    get Faith() {
+        return this.faith;
+    }
+    set Faith(val) {
+        this.faith = val;
+    }
+
+    get Inventory() {
+        return this.inventory;
+    }
+
     moveRight() { if(!document.querySelector("#battleDiv"))this.x++; }
     moveDown() { if(!document.querySelector("#battleDiv"))this.y++; }
     moveLeft() { if(!document.querySelector("#battleDiv"))this.x--; }
@@ -22,13 +58,18 @@ class Player {
 
     takeDamage(damage) {
         this.health -= damage;
-
+        let playerHP = document.querySelector("#playerHP");
+        playerHP.innerHTML = "Health: " + player.health;
         //Update hp on screen
         if(this.health <= 0)
         {
             // Game Over Screen\
             console.log("you are dead");
         }
+    }
+
+    pickUp(object){
+        this.inventory.push(object);
     }
 }
 

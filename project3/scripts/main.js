@@ -123,37 +123,33 @@ function loadLevel(wX, wY) {
 	player.element.classList.add("player");
 	container.appendChild(player.element);
 	createEnemyList();
-	for(let e of enemies)
-	{
-		if(e.alive)
-		{
-		e.element = node.cloneNode(true);
-		e.element.classList.add(e.name);
-		container.appendChild(e.element);
+	for (let e of enemies) {
+		if (e.alive) {
+			e.element = node.cloneNode(true);
+			e.element.classList.add(e.name);
+			container.appendChild(e.element);
 		}
 	}
-	
+
 	/* let's instantiate our game objects */
 	// pull the current level data
 	const levelObjects = allGameObjects["level" + wX + wY];
 
 	// loop through this level's objects ... 
 	for (let obj of levelObjects) {
-		if(obj.type != "monster")
-		{
-		const clone = Object.assign({}, obj); 		// clone the object
-		clone.element = node.cloneNode(true); 		// clone the element
-		clone.element.classList.add(obj.className); // add the className so we see the right image
-		currentGameObjects.push(clone);				// add to currentGameObjects array  (so it gets moved onto the map)
-		container.appendChild(clone.element);		// add to DOM tree (so we can see it!)
+		if (obj.type != "monster") {
+			const clone = Object.assign({}, obj); 		// clone the object
+			clone.element = node.cloneNode(true); 		// clone the element
+			clone.element.classList.add(obj.className); // add the className so we see the right image
+			currentGameObjects.push(clone);				// add to currentGameObjects array  (so it gets moved onto the map)
+			container.appendChild(clone.element);		// add to DOM tree (so we can see it!)
 		}
 	}
-	
+
 }
 
 // Called at end of battle to return to level
-function battleEnd()
-{
+function battleEnd() {
 	document.querySelector("#gridContainer").innerHTML = "";
 	let numCols = currentGameWorld[0].length;
 	let numRows = currentGameWorld.length;
@@ -161,15 +157,12 @@ function battleEnd()
 	drawGrid(currentGameWorld);
 
 	container.appendChild(player.element);
-	for(let obj of currentGameObjects)
-	{
+	for (let obj of currentGameObjects) {
 		container.appendChild(obj.element);
 	}
 
-	for(let enemy of enemies)
-	{
-		if(enemy.alive)
-		{
+	for (let enemy of enemies) {
+		if (enemy.alive) {
 			container.appendChild(enemy.element);
 		}
 	}
@@ -180,12 +173,9 @@ function battleEnd()
 }
 
 // Creates a list of monsters from the currentGameObjects array
-function createEnemyList()
-{
-	for(let object of allGameObjects["level" + worldX + worldY])
-	{
-		if(object.type == "monster")
-		{
+function createEnemyList() {
+	for (let object of allGameObjects["level" + worldX + worldY]) {
+		if (object.type == "monster") {
 			let enemy = new Monster(object.x, object.y, 20, object.className);
 			enemies.push(enemy);
 		}
@@ -257,8 +247,7 @@ function drawGameObjects(array) {
 	}
 
 	// enemies
-	for (let enemy of enemies)
-	{
+	for (let enemy of enemies) {
 		enemy.element.style.left = `${enemy.x * (cellWidth + cellSpacing)}px`;
 		enemy.element.style.top = `${enemy.y * (cellWidth + cellSpacing)}px`;
 	}
@@ -274,28 +263,28 @@ function movePlayer(e) {
 			nextX = player.x + 1;
 			nextY = player.y;
 			if (checkIsLegalMove(nextX, nextY)) player.moveRight();
-			if (document.querySelector("#textDiv")) {document.querySelector("#textDiv").remove()}
+			if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
 			break;
 
 		case keyboard.DOWN:
 			nextX = player.x;
 			nextY = player.y + 1;
 			if (checkIsLegalMove(nextX, nextY)) player.moveDown();
-			if (document.querySelector("#textDiv")) {document.querySelector("#textDiv").remove()}
+			if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
 			break;
 
 		case keyboard.LEFT:
 			nextX = player.x - 1;
 			nextY = player.y;
 			if (checkIsLegalMove(nextX, nextY)) player.moveLeft();
-			if (document.querySelector("#textDiv")) {document.querySelector("#textDiv").remove()}
+			if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
 			break;
 
 		case keyboard.UP:
 			nextX = player.x;
 			nextY = player.y - 1;
 			if (checkIsLegalMove(nextX, nextY)) player.moveUp();
-			if (document.querySelector("#textDiv")) {document.querySelector("#textDiv").remove()}
+			if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
 			break;
 
 		case keyboard.SPACE:
@@ -355,10 +344,8 @@ function movePlayer(e) {
 		// 	}
 
 		// }
-		for(let enemy of enemies)
-		{
-			if(enemy.x == nextX && enemy.y == nextY && enemy.alive)
-			{
+		for (let enemy of enemies) {
+			if (enemy.x == nextX && enemy.y == nextY && enemy.alive) {
 				playerWorldX = player.x;
 				playerWorldY = player.y;
 				battle(enemy);
@@ -454,11 +441,9 @@ function battle(enemy) {
 	console.log("Time to duel");
 	console.log(enemy.name);
 	createBattleScene(enemy);
-	
 }
 
-function createBattleScene(enemy)
-{
+function createBattleScene(enemy) {
 	document.querySelector("#gridContainer").innerHTML = "";
 	let battleDiv = document.createElement("div");
 	battleDiv.id = "battleDiv";
@@ -473,7 +458,7 @@ function createBattleScene(enemy)
 	battleDiv.appendChild(playerSide);
 
 	let playerStats = document.createElement("div");
-	playerStats.id ="playerStats";
+	playerStats.id = "playerStats";
 	playerSide.appendChild(playerStats);
 
 	let playerOptions = document.createElement("div");
@@ -485,6 +470,42 @@ function createBattleScene(enemy)
 	enemyImage.style.backgroundPositionX = -2000;
 	enemySide.appendChild(enemyImage);
 
+	let playerHP = document.createElement("div");
+	playerHP.id = "playerHP";
+	playerHP.className = "stat";
+	playerHP.innerHTML = "Health: " + player.Health;
+	playerStats.appendChild(playerHP);
+
+	let playerAttack = document.createElement("div");
+	playerAttack.id = "playerAttack";
+	playerAttack.className = "stat";
+	playerAttack.innerHTML = "Attack: " + player.Attack;
+	playerStats.appendChild(playerAttack);
+
+	let playerMagic = document.createElement("div");
+	playerMagic.id = "playerMagic";
+	playerMagic.className = "stat";
+	playerMagic.innerHTML = "Magic: " + player.Magic;
+	playerStats.appendChild(playerMagic);
+
+
+	let playerFaith = document.createElement("div");
+	playerFaith.id = "playerFaith";
+	playerFaith.className = "stat";
+	playerFaith.innerHTML = "Faith: " + player.Faith;
+	playerStats.appendChild(playerFaith);
+
+	// Button to attack
+	let attackButton = document.createElement("button");
+	attackButton.id = "attackButton";
+	attackButton.className = "button";
+	attackButton.innerHTML = "FIGHT";
+	attackButton.onclick = function (e) {
+		console.log("Attack Button Was Clicked")
+		enemy.takeDamage(10);
+		enemy.enemyTurn();
+	}
+	playerOptions.appendChild(attackButton)
 
 	// Button to run from the battle
 	let leaveBattle = document.createElement("button");
@@ -498,18 +519,26 @@ function createBattleScene(enemy)
 		battleEnd();
 	}
 	playerOptions.appendChild(leaveBattle);
-	
 
-	// Button to attack
-	let attackButton = document.createElement("button");
-	attackButton.id = "attackButton";
-	attackButton.className = "button";
-	attackButton.innerHTML = "ATTACK";
-	attackButton.onclick = function (e) {
-		console.log("Attack Button Was Clicked")
-		enemy.takeDamage(10);
-		enemy.enemyTurn();
+	// Button to cast fireBall
+	let magicButton = document.createElement("button");
+	magicButton.id = "magicButton";
+	magicButton.className = "button";
+	magicButton.innerHTML = "FIREBALL";
+	magicButton.onclick = function (e) {
+		console.log("Fireballs Shall be cast");
 	}
-	playerOptions.appendChild(attackButton)
+	// IF player.inventory contains fireBall Staff append button else dont
+	playerOptions.appendChild(magicButton);
+
+	let prayerButton = document.createElement("button");
+	prayerButton.id = "prayerButton";
+	prayerButton.className = "button";
+	prayerButton.innerHTML = "PRAY";
+	prayerButton.onclick = function (e) {
+		console.log("Oh lord he coming");
+	}
+	// IF player.inventory contains talisman append button else don't
+	playerOptions.appendChild(prayerButton);
 
 }

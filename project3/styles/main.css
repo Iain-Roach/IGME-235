@@ -162,7 +162,7 @@ span.monster3{
 /* player style */
 span.player{ 
 	background: url(../images/nethack-32x32.png);
-	background-position: -96px -96px;
+	background-position: -32px -224px;
 	z-index: 1000; /* On top of everything */
 	transition-property: all;
 	transition-duration: .25s;
@@ -224,13 +224,13 @@ span.bee01 {
 	border: 1px solid black;
 	width: 960px;
 	height: 640px;
-	background-color: white;
+	background-color: black;
 	
 }
 
 #enemySide {
 	display: flex;
-	border-bottom: 1px solid  black;
+	border-bottom: 1px solid  whitesmoke;
 	height: 50%;
 	width: 100%;
 	align-items: center;
@@ -238,9 +238,10 @@ span.bee01 {
 }
 
 #enemyImage {
-	border: 1px solid black;
-	width: 200px;
-	height: 200px;
+	border: 1px solid whitesmoke;
+	border-radius: 12px;
+	width: 90%;
+	height: 90%;
 	background: url(../images/nethack-32x32.png);
 	background-size: 8000px;
 	background-position: -2000px 0px;
@@ -256,17 +257,21 @@ span.bee01 {
 
 #playerStats {
 	grid-area: stats;
-	border-right: 1px solid red;
+	height: 320px;
+	border-right: 1px solid whitesmoke;
 }
 
 #playerOptions {
 	grid-area: options;
-	border-left: 1px solid black;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .button {
 	padding: 14px 60px;
-	width: 200px;
+	width: auto;
+	height: auto;
 	font-size: 20px;
 	background-color: red;
 	border-radius: 12px;
@@ -286,4 +291,45 @@ span.bee01 {
 	box-shadow: 0 5px #666;
 	transform: translateY(4px);
 }
+
+#attackButton {
+	grid-column-start: 3;
+	grid-row-start: 3;
+	margin-bottom: 10px;
+}
+
+#leaveBattle {
+	grid-column-start: 5;
+	grid-row-start: 5;
+
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 25px;
+	padding-left: 10px;
+	width: auto;
+	height: 25px;
+
+	font-size: 16px;
+}
+
+#magicButton {
+	grid-column-start: 3;
+	grid-row-start: 2;
+	margin-bottom: 10px;
+}
+#prayerButton {
+	grid-column-start: 3;
+	grid-row-start: 4;
+	margin-bottom: 10px;
+}
+
+.stat {
+	padding-top: 25px;
+	padding-left: 25px;
+	color: whitesmoke;
+	text-align: left;
+	font-size: 18px;
+}
+
+
 
