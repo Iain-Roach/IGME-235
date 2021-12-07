@@ -203,6 +203,14 @@ span.bee01 {
 	background-position: -32px 0px;
 }
 
+span.firestaff
+{
+	position: absolute;
+	left: -100px;
+	top: -100px;
+	background-position: -288px 352px;
+}
+
 #textDiv {
 	position: relative;
 	top: 26rem;
@@ -237,14 +245,27 @@ span.bee01 {
 	justify-content: center;
 }
 
-#enemyImage {
+#enemyText {
 	border: 1px solid whitesmoke;
+	color: whitesmoke;
 	border-radius: 12px;
 	width: 90%;
 	height: 90%;
-	background: url(../images/nethack-32x32.png);
 	background-size: 8000px;
 	background-position: -2000px 0px;
+	overflow-y: scroll;
+}
+
+#battleDesc {
+	color: white;
+	padding: 20px;
+	text-align: center;
+}
+
+.combat-text {
+	color: white;
+	text-align: center;
+	padding: 20px;
 }
 
 #playerSide {

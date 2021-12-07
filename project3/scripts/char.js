@@ -74,14 +74,16 @@ class Player {
 }
 
 class Monster {
-    constructor(x = 5, y = 5, health = 20, name, alive = true, element = undefined) {
+    constructor(x = 5, y = 5, element = undefined) {
         this.x = x;
         this.y = y;
-        this.health = health;
+        this.health = 20;
         this.element = element;
-        this.name = name;
-        this.alive = alive;
+        this.class = cssClass.MONSTER3;
+        this.alive = true;
         this.turn = false;
+        this.attack = 5;
+        this.desc = "The Shard Keeper lumbers towards you, twirling its massive polearm. Good Luck";
     }
 
     get X() {
@@ -94,6 +96,10 @@ class Monster {
 
     get Health() {
         return this.health;
+    }
+
+    get Desc() {
+        return this.desc;
     }
 
     moveRight() { this.x++; }
@@ -124,9 +130,58 @@ class Monster {
         }
     }
     
-    enemyTurn()
-    {
-        console.log("player took 10 damage");
-        player.takeDamage(10);
+    // enemyTurn()
+    // {
+    //     let text = document.querySelector("#battleDesc");
+    //     text.innerHTML += "Fus ro dah";
+    //     player.takeDamage(this.attack);
+    // }
+}
+
+class Medusa extends Monster {
+    constructor(x, y, element = undefined,) {
+        super(x, y ,element);
+        //super(y);
+        //super(element);
+        this.class = cssClass.MONSTER3;
+        this.health = 20;
+        this.name = "Medusa";
+        this.attack = 5;
+        this.greeting = "A Medusa slithers towards you, the snakes on its head poised to strike";
+        this.move = "The Medusa lunges forwards biting you for 5 damage";
+    }
+
+    get Greeting() {
+        return this.greeting;
+    }
+
+    enemyTurn() {
+        let text = document.querySelector("#battleDesc");
+        text.innerHTML += this.move;
+        player.takeDamage(this.attack);
+    }
+}
+
+class Bee extends Monster {
+    constructor(x, y, element = undefined,) {
+        super(x, y ,element);
+        //super(y);
+        //super(element);
+        this.class = cssClass.BEE01;
+        this.health = 15;
+        this.name = "Bee";
+        this.attack = 8;
+        this.greeting = "A giant bee buzzes forward, brandishing a giant stinger";
+        this.move = "The bee stabs you with its stinger for 8 damage";
+    }
+
+    get Greeting() {
+        return this.greeting;
+    }
+
+    enemyTurn() {
+        let text = document.querySelector("#battleDesc");
+        text.innerHTML += this.move;
+        player.takeDamage(this.attack);
     }
 }

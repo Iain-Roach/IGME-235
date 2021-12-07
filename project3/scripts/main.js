@@ -126,7 +126,7 @@ function loadLevel(wX, wY) {
 	for (let e of enemies) {
 		if (e.alive) {
 			e.element = node.cloneNode(true);
-			e.element.classList.add(e.name);
+			e.element.classList.add(e.class);
 			container.appendChild(e.element);
 		}
 	}
@@ -174,10 +174,24 @@ function battleEnd() {
 
 // Creates a list of monsters from the currentGameObjects array
 function createEnemyList() {
-	for (let object of allGameObjects["level" + worldX + worldY]) {
-		if (object.type == "monster") {
-			let enemy = new Monster(object.x, object.y, 20, object.className);
-			enemies.push(enemy);
+	for (let mon of allMonsters["level" + worldX + worldY]) {
+		// if (object.type == "monster") {
+		// 	//let enemy = new Monster(object.x, object.y, 20, object.type);
+		// 	let enemy = new Monster(object.x, object.y);
+		// 	enemies.push(enemy);
+		// }
+		let enemy;
+		switch(mon.type)
+		{
+			case "Medusa":
+				console.log("A medusa is spawned");
+				enemy = new Medusa(mon.x, mon.y);
+				enemies.push(enemy);
+				break;
+			case "Bee":
+				enemy = new Bee(mon.x, mon.y);
+				enemies.push(enemy);
+				break;
 		}
 	}
 	// for(let i = 0; i< allGameObjects["level" + worldX + worldY].length; i++)
@@ -307,7 +321,7 @@ function movePlayer(e) {
 							container.appendChild(textDiv);
 							let scrollText = document.createElement('p');
 							scrollText.id = "scrollText";
-							scrollText.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque metus erat, dictum a nisi ut, accumsan hendrerit massa. Phasellus suscipit vitae lorem sed vulputate. Sed."
+							scrollText.innerHTML = "Welcome to Island Explorer, thank you for trying out my game :D"
 							textDiv.appendChild(scrollText);
 						}
 						else {
@@ -316,8 +330,24 @@ function movePlayer(e) {
 
 						break;
 
-					default:
-						console.log("Not Scroll");
+					case "firestaff":
+						if(!player.inventory.includes("fireStaff"))
+						{
+						player.pickUp(object.type);
+						if (!document.querySelector("#textDiv")) {
+							let textDiv = document.createElement('div');
+							textDiv.id = "textDiv";
+							container.appendChild(textDiv);
+							let scrollText = document.createElement('p');
+							scrollText.id = "scrollText";
+							scrollText.innerHTML = "This staff seems to be able to shoot fireballs";
+							textDiv.appendChild(scrollText);
+						}
+						else{
+							textDiv.remove();
+						}
+						container.removeChild(object.element);
+						}
 						break;
 				}
 			}
@@ -333,17 +363,6 @@ function movePlayer(e) {
 	function checkIsLegalMove(nextX, nextY) {
 		let nextTile = currentGameWorld[nextY][nextX];
 
-		// for(let object of currentGameObjects)
-		// {
-		// 	if(object.x == nextX && object.y == nextY)
-		// 	{
-		// 		if(object.className == "bee01")
-		// 		{
-		// 			console.log("its a bee");
-		// 		}
-		// 	}
-
-		// }
 		for (let enemy of enemies) {
 			if (enemy.x == nextX && enemy.y == nextY && enemy.alive) {
 				playerWorldX = player.x;
@@ -465,10 +484,14 @@ function createBattleScene(enemy) {
 	playerOptions.id = "playerOptions";
 	playerSide.appendChild(playerOptions);
 
-	let enemyImage = document.createElement("div");
-	enemyImage.id = "enemyImage";
-	enemyImage.style.backgroundPositionX = -2000;
-	enemySide.appendChild(enemyImage);
+	let enemyText = document.createElement("div");
+	enemyText.id = "enemyText";
+	enemySide.appendChild(enemyText);
+
+	let battleDesc = document.createElement("div");
+	battleDesc.id = "battleDesc";
+	battleDesc.innerHTML = enemy.Desc;
+	enemyText.appendChild(battleDesc);
 
 	let playerHP = document.createElement("div");
 	playerHP.id = "playerHP";
@@ -501,9 +524,14 @@ function createBattleScene(enemy) {
 	attackButton.className = "button";
 	attackButton.innerHTML = "FIGHT";
 	attackButton.onclick = function (e) {
-		console.log("Attack Button Was Clicked")
-		enemy.takeDamage(10);
-		enemy.enemyTurn();
+		battleDesc.innerHTML += 
+		`<p class='combat-text'>You attack the monster with your long-sword for ${player.Attack} damage</p>`;
+		enemy.takeDamage(player.Attack);
+		if(enemy.alive)
+		{
+			enemy.enemyTurn();
+		}
+	
 	}
 	playerOptions.appendChild(attackButton)
 
@@ -513,7 +541,6 @@ function createBattleScene(enemy) {
 	leaveBattle.className = "button";
 	leaveBattle.innerHTML = "RUN";
 	leaveBattle.onclick = function (e) {
-		console.log("Run Button was Clicked");
 		//currentGameObjects.find(e => e.className == this.name)
 		//currentGameObjects = currentGameObjects.filter(e => e.className != this.name);
 		battleEnd();
@@ -527,9 +554,20 @@ function createBattleScene(enemy) {
 	magicButton.innerHTML = "FIREBALL";
 	magicButton.onclick = function (e) {
 		console.log("Fireballs Shall be cast");
+		battleDesc.innerHTML +=
+		`<p class='combat-text'>You channel a fireball at the end of your staff and fire it towards the monster, the monster is burned for ${player.Magic} damage</p>`;
+		enemy.takeDamage(player.Magic);
+		if(enemy.alive)
+		{
+			enemy.enemyTurn();
+		}
 	}
 	// IF player.inventory contains fireBall Staff append button else dont
-	playerOptions.appendChild(magicButton);
+	if(player.inventory.includes("fireStaff"))
+	{
+		playerOptions.appendChild(magicButton);
+	}
+
 
 	let prayerButton = document.createElement("button");
 	prayerButton.id = "prayerButton";
