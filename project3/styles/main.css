@@ -88,6 +88,13 @@ span.bush {
 	background-position: -96px -32px;
 }
 
+span.crack {
+	width: 32px;
+	height: 32px;
+	background: url(../images/terrain.png);
+	background-position: -128px -32px;
+}
+
 span.cell{
 	height:32px;
 	width:32px;

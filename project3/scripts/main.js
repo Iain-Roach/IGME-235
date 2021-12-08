@@ -33,11 +33,21 @@ const worldTile = Object.freeze({
 	GROUND: 4,
 	DIRT: 5,
 	SHORTGRASS: 6,
-	BUSH: 7
+	BUSH: 7,
+	CRACK: 8,
 });
 
-// the "grunt" sound that plays when the player attempts to move into a wall or water square
+// the "thud" sound that plays when the player attempts to move into a wall or water square
 let effectAudio = undefined;
+// Sound of sword swing
+let attackAudio = undefined;
+// Sound of fireball
+let fireAudio = undefined;
+// Sound of crumbling brick
+let crumbleAudio = undefined;
+// Sound of interaction
+let interactAudio = undefined;
+
 
 // level data is over in gamedata.js
 let currentLevelNumber = 1;
@@ -80,20 +90,8 @@ function createGridElements(numRows, numCols) {
 		}
 	}
 }
-// function makeLevel() {
-// 	document.querySelector("#gridContainer").innerHTML = "";
-// 	currentGameWorld = gameworld["world" + worldX + worldY];
-// 	let numCols = currentGameWorld[0].length;
-// 	let numRows = currentGameWorld.length;
-// 	createGridElements(numRows, numCols);
-// 	drawGrid(currentGameWorld);
-// 	loadLevel(worldX, worldY);
-// 	drawGameObjects(currentGameObjects);
-// 	effectAudio = document.querySelector("#effectAudio");
-// 	effectAudio.volume = 0.2;
-// 	setupEvents();
-// }
 
+// Clears grid and loads the next level using world x and y
 function NextLevel() {
 	document.querySelector("#gridContainer").innerHTML = "";
 	currentGameWorld = gameworld["world" + worldX + worldY];
@@ -103,10 +101,23 @@ function NextLevel() {
 	drawGrid(currentGameWorld);
 	loadLevel(worldX, worldY);
 	drawGameObjects(currentGameObjects);
-	effectAudio = document.querySelector("#effectAudio");
-	effectAudio.volume = 0.2;
+	audioSetup();
 	setupEvents();
 
+}
+
+// set up audio
+function audioSetup() {
+	effectAudio = document.querySelector("#effectAudio");
+	effectAudio.volume = 0.2;
+	attackAudio = document.querySelector("#attackAudio");
+	attackAudio.volume = 0.2;
+	fireAudio = document.querySelector("#fireAudio");
+	fireAudio.volume = 0.2;
+	crumbleAudio = document.querySelector("#crumbleAudio");
+	crumbleAudio.volume = 0.2;
+	interactAudio = document.querySelector("#interactAudio");
+	interactAudio.volume = 0.2;
 }
 
 // the elements on the screen that can move and change - also part of the "view"
@@ -174,8 +185,7 @@ function battleEnd() {
 		}
 	}
 	drawGameObjects(currentGameObjects);
-	effectAudio = document.querySelector("#effectAudio");
-	effectAudio.volume = 0.2;
+	audioSetup();
 	setupEvents();
 }
 
@@ -213,7 +223,6 @@ function drawGrid(array) {
 			const tile = array[row][col];
 			const element = cells[row][col];
 
-			// ** can you figure our how to get rid of this switch? Maybe another enumeration, of the tile CSS classes? **
 			switch (tile) {
 				case worldTile.FLOOR:
 					element.classList.add("floor")
@@ -245,6 +254,9 @@ function drawGrid(array) {
 
 				case worldTile.BUSH:
 					element.classList.add("bush");
+					break;
+				case worldTile.CRACK:
+					element.classList.add("crack");
 					break;
 			}
 		}
@@ -280,28 +292,28 @@ function movePlayer(e) {
 			nextX = player.x + 1;
 			nextY = player.y;
 			if (checkIsLegalMove(nextX, nextY)) player.moveRight();
-			if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
+			//if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
 			break;
 
 		case keyboard.DOWN:
 			nextX = player.x;
 			nextY = player.y + 1;
 			if (checkIsLegalMove(nextX, nextY)) player.moveDown();
-			if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
+			//if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
 			break;
 
 		case keyboard.LEFT:
 			nextX = player.x - 1;
 			nextY = player.y;
 			if (checkIsLegalMove(nextX, nextY)) player.moveLeft();
-			if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
+			//if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
 			break;
 
 		case keyboard.UP:
 			nextX = player.x;
 			nextY = player.y - 1;
 			if (checkIsLegalMove(nextX, nextY)) player.moveUp();
-			if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
+			//if (document.querySelector("#textDiv")) { document.querySelector("#textDiv").remove() }
 			break;
 
 		case keyboard.SPACE:
@@ -309,7 +321,12 @@ function movePlayer(e) {
 			break;
 	}
 
+	// Checks to see if player is on an object and performs an action depending on that object
 	function interact() {
+		if (document.querySelector("#textDiv"))
+		{
+			textDiv.remove();
+		}
 		// currentGameObjects gives list of all game objects from level
 		for (let object of currentGameObjects) {
 			// Checks to see if player.x and player.y is on any gameObject
@@ -319,6 +336,7 @@ function movePlayer(e) {
 					let text = document.querySelector("#textDiv");
 					text.remove();
 				}
+				
 				switch (object.className) {
 					case "scroll00":
 						if(!player.inventory.includes("scroll00"))
@@ -326,20 +344,8 @@ function movePlayer(e) {
 						container.removeChild(object.element);
 						interactText("scroll00", "Welcome to Island Explorer, thank you for trying out my game :D");
 						}
-						// console.log("ON SCROOOOLL00");
-						// if (!document.querySelector("#textDiv")) {
-						// 	let textDiv = document.createElement('div');
-						// 	textDiv.id = "textDiv";
-						// 	container.appendChild(textDiv);
-						// 	let scrollText = document.createElement('p');
-						// 	scrollText.id = "scrollText";
-						// 	scrollText.innerHTML = "Welcome to Island Explorer, thank you for trying out my game :D"
-						// 	textDiv.appendChild(scrollText);
-						// }
-						// else {
-						// 	textDiv.remove();
-						// }
-
+						
+						interactAudio.play();
 						break;
 					case "firestaff":
 						if(!player.inventory.includes("firestaff"))
@@ -347,22 +353,7 @@ function movePlayer(e) {
 						container.removeChild(object.element);
 						interactText("firestaff", "This staff seems to be able to shoot fireballs");
 						}
-						// if (!player.inventory.includes("fireStaff")) {
-						// 	player.pickUp(object.type);
-						// 	if (!document.querySelector("#textDiv")) {
-						// 		let textDiv = document.createElement('div');
-						// 		textDiv.id = "textDiv";
-						// 		container.appendChild(textDiv);
-						// 		let scrollText = document.createElement('p');
-						// 		scrollText.id = "scrollText";
-						// 		scrollText.innerHTML = "This staff seems to be able to shoot fireballs";
-						// 		textDiv.appendChild(scrollText);
-						// 	}
-						// 	else {
-						// 		textDiv.remove();
-						// 	}
-						// 	container.removeChild(object.element);
-						// }
+						interactAudio.play();
 						break;
 					case "talisman":
 						if(!player.inventory.includes("talisman"))
@@ -370,22 +361,7 @@ function movePlayer(e) {
 						container.removeChild(object.element);
 						interactText("talisman", "The bell shines with a radiant aura");
 						}
-						// if (!player.inventory.includes("talisman")) {
-						// 	player.pickUp(object.type);
-						// 	if (!document.querySelector("#textDiv")) {
-						// 		let textDiv = document.createElement('div');
-						// 		textDiv.id = "textDiv";
-						// 		container.appendChild(textDiv);
-						// 		let scrollText = document.createElement('p');
-						// 		scrollText.id = "scrollText";
-						// 		scrollText.innerHTML = "The bell shines with a radiant aura";
-						// 		textDiv.appendChild(scrollText);
-						// 	}
-						// 	else {
-						// 		textDiv.remove();
-						// 	}
-						// 	container.removeChild(object.element);
-						// }
+						interactAudio.play();
 						break;
 					case "strgaunt":
 						if(!player.inventory.includes("strgaunt"))
@@ -394,23 +370,7 @@ function movePlayer(e) {
 						interactText("strgaunt", "As you equip these gauntlets you feel much stronger");
 						player.Attack += 5;
 						}
-						// if (!player.inventory.includes("strgaunt")) {
-						// 	player.pickUp(object.type);
-						// 	if (!document.querySelector("#textDiv")) {
-						// 		let textDiv = document.createElement('div');
-						// 		textDiv.id = "textDiv";
-						// 		container.appendChild(textDiv);
-						// 		let scrollText = document.createElement('p');
-						// 		scrollText.id = "scrollText";
-						// 		scrollText.innerHTML = "As you equip these gauntlets you feel much stronger";
-						// 		textDiv.appendChild(scrollText);
-						// 		player.Attack += 5;
-						// 	}
-						// 	else {
-						// 		textDiv.remove();
-						// 	}
-						// 	container.removeChild(object.element);
-						// }
+						interactAudio.play();
 						break;
 					case "crystalball":
 						if(!player.inventory.includes("crystalball"))
@@ -419,24 +379,7 @@ function movePlayer(e) {
 						interactText("crystalball", "You stare into the crystal ball, you feel as if you have increased your understanding for magic");
 						player.Magic += 5;
 						}
-						// if (!player.inventory.includes("crystalball")) {
-						// 	player.pickUp(object.type);
-						// 	if (!document.querySelector("#textDiv")) {
-						// 		let textDiv = document.createElement('div');
-						// 		textDiv.id = "textDiv";
-						// 		container.appendChild(textDiv);
-						// 		let scrollText = document.createElement('p');
-						// 		scrollText.id = "scrollText";
-						// 		scrollText.innerHTML = "You stare into the crystal ball, you feel as if you have increased your understanding for magic";
-						// 		textDiv.appendChild(scrollText);
-						// 		player.Magic += 5;
-								
-						// 	}
-						// 	else {
-						// 		textDiv.remove();
-						// 	}
-						// 	container.removeChild(object.element);
-						// }
+						interactAudio.play();
 						break;
 					case "ring":
 						if(!player.inventory.includes("ring"))
@@ -445,24 +388,7 @@ function movePlayer(e) {
 						interactText("ring", "This ring shines brightly has you pick it up, As you slide it onto your finger you feel your faith increase");
 						player.Faith += 5;
 						}
-						// if (!player.inventory.includes("ring")) {
-						// 	player.pickUp(object.type);
-						// 	if (!document.querySelector("#textDiv")) {
-						// 		let textDiv = document.createElement('div');
-						// 		textDiv.id = "textDiv";
-						// 		container.appendChild(textDiv);
-						// 		let scrollText = document.createElement('p');
-						// 		scrollText.id = "scrollText";
-						// 		scrollText.innerHTML = "This ring shines brightly has you pick it up, As you slide it onto your finger you feel your faith increase";
-						// 		textDiv.appendChild(scrollText);
-						// 		player.Faith += 5;
-								
-						// 	}
-						// 	else {
-						// 		textDiv.remove();
-						// 	}
-						// 	container.removeChild(object.element);
-						// }
+						interactAudio.play();
 						break;
 					case "apple":
 						if(!player.inventory.includes("apple"))
@@ -472,25 +398,7 @@ function movePlayer(e) {
 						player.MaxHealth += 50;
 						player.Health = player.MaxHealth;
 						}
-						// if (!player.inventory.includes("apple")) {
-						// 	player.pickUp(object.type);
-						// 	if (!document.querySelector("#textDiv")) {
-						// 		let textDiv = document.createElement('div');
-						// 		textDiv.id = "textDiv";
-						// 		container.appendChild(textDiv);
-						// 		let scrollText = document.createElement('p');
-						// 		scrollText.id = "scrollText";
-						// 		scrollText.innerHTML = "You devour the delicous apple, you feel much more hearty";
-						// 		textDiv.appendChild(scrollText);
-						// 		player.MaxHealth += 50;
-						// 		player.Health = player.MaxHealth;
-								
-						// 	}
-						// 	else {
-						// 		textDiv.remove();
-						// 	}
-						// 	container.removeChild(object.element);
-						// }
+						interactAudio.play();
 						break;
 				}
 			}
@@ -498,6 +406,7 @@ function movePlayer(e) {
 		
 	}
 
+	// Helper function to display text
 	function interactText(objectType, itemDesc)
 	{
 			player.pickUp(objectType);
@@ -515,8 +424,13 @@ function movePlayer(e) {
 			}
 	}
 
+	// Checks to see if player can move to the next tile
 	function checkIsLegalMove(nextX, nextY) {
 		let nextTile = currentGameWorld[nextY][nextX];
+		if (document.querySelector("#textDiv"))
+		{
+			textDiv.remove();
+		}
 
 		for (let enemy of enemies) {
 			if (enemy.x == nextX && enemy.y == nextY && enemy.alive) {
@@ -525,14 +439,7 @@ function movePlayer(e) {
 				battle(enemy);
 			}
 		}
-		if (nextTile != worldTile.WALL && nextTile != worldTile.WATER && nextTile != worldTile.BUSH) {
-
-			// if (nextTile == worldTile.GROUND) {
-			// 	console.log("Moved outside area");
-			// 	NextLevel();
-			//     //player.x = 1;
-			//     //player.y = 1;
-			// }
+		if (nextTile != worldTile.WALL && nextTile != worldTile.WATER && nextTile != worldTile.BUSH && nextTile != worldTile.CRACK) {
 			//Exits top of screen
 			if (nextY == 0) {
 				playerWorldX = player.x;
@@ -552,7 +459,7 @@ function movePlayer(e) {
 				NextLevel();
 			}
 			//Exits right of screen
-			else if (nextX == 29) {
+			else if (nextX == 29 && nextTile != worldTile.CRACK) {
 				playerWorldY = player.y;
 				playerWorldX = 0;
 				worldX += 1;
@@ -570,6 +477,34 @@ function movePlayer(e) {
 				NextLevel();
 			}
 			return true;
+		}
+		else if(nextTile == worldTile.CRACK) {
+			if(player.Attack > 10)
+			{
+				playerWorldY = player.y;
+				playerWorldX = 0;
+				worldX += 1;
+				console.log("Hit right transfer zone");
+				console.log("Going to zone" + worldX + "|" + worldY);
+				NextLevel();
+			}
+			else
+			{
+				console.log("you are to weak");
+				if (!document.querySelector("#textDiv")) {
+					console.log("DIED");
+					let textDiv = document.createElement('div');
+					textDiv.id = "textDiv";
+					container.appendChild(textDiv);
+					let scrollText = document.createElement('p');
+					scrollText.id = "scrollText";
+					scrollText.innerHTML = "You are too weak to break down the crumbling wall";
+					textDiv.appendChild(scrollText);
+				}
+				else {
+					textDiv.remove();
+				}
+			}
 		}
 		else {
 			effectAudio.play();
@@ -611,12 +546,13 @@ function gridClicked(e) {
 	console.log(`${col},${row}`);
 }
 
+// Starts the battle scene
 function battle(enemy) {
-	console.log("Time to duel");
 	console.log(enemy.name);
 	createBattleScene(enemy);
 }
 
+// Constructs the battle scene and all the buttons
 function createBattleScene(enemy) {
 	document.querySelector("#gridContainer").innerHTML = "";
 	let battleDiv = document.createElement("div");
@@ -685,7 +621,7 @@ function createBattleScene(enemy) {
 		if (enemy.alive) {
 			enemy.enemyTurn();
 		}
-
+		attackAudio.play();
 	}
 	playerOptions.appendChild(attackButton)
 
@@ -698,6 +634,7 @@ function createBattleScene(enemy) {
 		//currentGameObjects.find(e => e.className == this.name)
 		//currentGameObjects = currentGameObjects.filter(e => e.className != this.name);
 		battleEnd();
+		stepAudio.play();
 	}
 	playerOptions.appendChild(leaveBattle);
 
@@ -711,6 +648,7 @@ function createBattleScene(enemy) {
 		battleDesc.innerHTML +=
 			`<p class='combat-text'>You channel a fireball at the end of your staff and fire it towards the monster, the monster is burned for ${player.Magic} damage</p>`;
 		enemy.takeDamage(player.Magic);
+		fireAudio.play();
 		if (enemy.alive) {
 			enemy.enemyTurn();
 		}
@@ -746,6 +684,7 @@ function createBattleScene(enemy) {
 
 }
 
+// When player dies
 function gameOver()
 {
 	document.querySelector("#gridContainer").innerHTML = "";
@@ -776,7 +715,7 @@ function gameOver()
 
 
 }
-
+// When player beats the game
 function endGame() {
 	document.querySelector("#gridContainer").innerHTML = "";
 	worldX = 0;
