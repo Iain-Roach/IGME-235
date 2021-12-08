@@ -138,11 +138,14 @@ function loadLevel(wX, wY) {
 	// loop through this level's objects ... 
 	for (let obj of levelObjects) {
 		if (obj.type != "monster") {
+			if (!player.inventory.includes(obj.type))
+			{
 			const clone = Object.assign({}, obj); 		// clone the object
 			clone.element = node.cloneNode(true); 		// clone the element
 			clone.element.classList.add(obj.className); // add the className so we see the right image
 			currentGameObjects.push(clone);				// add to currentGameObjects array  (so it gets moved onto the map)
 			container.appendChild(clone.element);		// add to DOM tree (so we can see it!)
+			}
 		}
 	}
 
@@ -158,7 +161,11 @@ function battleEnd() {
 
 	container.appendChild(player.element);
 	for (let obj of currentGameObjects) {
-		container.appendChild(obj.element);
+		if(!player.inventory.includes(obj.type))
+		{
+			container.appendChild(obj.element);
+		}
+
 	}
 
 	for (let enemy of enemies) {
@@ -175,16 +182,9 @@ function battleEnd() {
 // Creates a list of monsters from the currentGameObjects array
 function createEnemyList() {
 	for (let mon of allMonsters["level" + worldX + worldY]) {
-		// if (object.type == "monster") {
-		// 	//let enemy = new Monster(object.x, object.y, 20, object.type);
-		// 	let enemy = new Monster(object.x, object.y);
-		// 	enemies.push(enemy);
-		// }
 		let enemy;
-		switch(mon.type)
-		{
+		switch (mon.type) {
 			case "Medusa":
-				console.log("A medusa is spawned");
 				enemy = new Medusa(mon.x, mon.y);
 				enemies.push(enemy);
 				break;
@@ -192,13 +192,16 @@ function createEnemyList() {
 				enemy = new Bee(mon.x, mon.y);
 				enemies.push(enemy);
 				break;
+			case "Knight":
+				enemy = new Knight(mon.x, mon.y);
+				enemies.push(enemy);
+				break;
+			case "Boss":
+				enemy = new Boss(mon.x, mon.y);
+				enemies.push(enemy);
+				break;
 		}
 	}
-	// for(let i = 0; i< allGameObjects["level" + worldX + worldY].length; i++)
-	// {
-	// 	if(allGameObjects["level" + worldX + worldY][i].type == "monster")
-	// 	allGameObjects["level" + worldX + worldY].splice(i, 1);
-	// }
 }
 
 function drawGrid(array) {
@@ -311,53 +314,205 @@ function movePlayer(e) {
 		for (let object of currentGameObjects) {
 			// Checks to see if player.x and player.y is on any gameObject
 			if (object.x == player.x && object.y == player.y) {
-				console.log("You are on the object");
+				if(document.querySelector("#textDiv"))
+				{
+					let text = document.querySelector("#textDiv");
+					text.remove();
+				}
 				switch (object.className) {
 					case "scroll00":
-						console.log("ON SCROOOOLL00");
-						if (!document.querySelector("#textDiv")) {
-							let textDiv = document.createElement('div');
-							textDiv.id = "textDiv";
-							container.appendChild(textDiv);
-							let scrollText = document.createElement('p');
-							scrollText.id = "scrollText";
-							scrollText.innerHTML = "Welcome to Island Explorer, thank you for trying out my game :D"
-							textDiv.appendChild(scrollText);
+						if(!player.inventory.includes("scroll00"))
+						{
+						container.removeChild(object.element);
+						interactText("scroll00", "Welcome to Island Explorer, thank you for trying out my game :D");
 						}
-						else {
-							textDiv.remove();
-						}
+						// console.log("ON SCROOOOLL00");
+						// if (!document.querySelector("#textDiv")) {
+						// 	let textDiv = document.createElement('div');
+						// 	textDiv.id = "textDiv";
+						// 	container.appendChild(textDiv);
+						// 	let scrollText = document.createElement('p');
+						// 	scrollText.id = "scrollText";
+						// 	scrollText.innerHTML = "Welcome to Island Explorer, thank you for trying out my game :D"
+						// 	textDiv.appendChild(scrollText);
+						// }
+						// else {
+						// 	textDiv.remove();
+						// }
 
 						break;
-
 					case "firestaff":
-						if(!player.inventory.includes("fireStaff"))
+						if(!player.inventory.includes("firestaff"))
 						{
-						player.pickUp(object.type);
-						if (!document.querySelector("#textDiv")) {
-							let textDiv = document.createElement('div');
-							textDiv.id = "textDiv";
-							container.appendChild(textDiv);
-							let scrollText = document.createElement('p');
-							scrollText.id = "scrollText";
-							scrollText.innerHTML = "This staff seems to be able to shoot fireballs";
-							textDiv.appendChild(scrollText);
-						}
-						else{
-							textDiv.remove();
-						}
 						container.removeChild(object.element);
+						interactText("firestaff", "This staff seems to be able to shoot fireballs");
 						}
+						// if (!player.inventory.includes("fireStaff")) {
+						// 	player.pickUp(object.type);
+						// 	if (!document.querySelector("#textDiv")) {
+						// 		let textDiv = document.createElement('div');
+						// 		textDiv.id = "textDiv";
+						// 		container.appendChild(textDiv);
+						// 		let scrollText = document.createElement('p');
+						// 		scrollText.id = "scrollText";
+						// 		scrollText.innerHTML = "This staff seems to be able to shoot fireballs";
+						// 		textDiv.appendChild(scrollText);
+						// 	}
+						// 	else {
+						// 		textDiv.remove();
+						// 	}
+						// 	container.removeChild(object.element);
+						// }
+						break;
+					case "talisman":
+						if(!player.inventory.includes("talisman"))
+						{
+						container.removeChild(object.element);
+						interactText("talisman", "The bell shines with a radiant aura");
+						}
+						// if (!player.inventory.includes("talisman")) {
+						// 	player.pickUp(object.type);
+						// 	if (!document.querySelector("#textDiv")) {
+						// 		let textDiv = document.createElement('div');
+						// 		textDiv.id = "textDiv";
+						// 		container.appendChild(textDiv);
+						// 		let scrollText = document.createElement('p');
+						// 		scrollText.id = "scrollText";
+						// 		scrollText.innerHTML = "The bell shines with a radiant aura";
+						// 		textDiv.appendChild(scrollText);
+						// 	}
+						// 	else {
+						// 		textDiv.remove();
+						// 	}
+						// 	container.removeChild(object.element);
+						// }
+						break;
+					case "strgaunt":
+						if(!player.inventory.includes("strgaunt"))
+						{
+						container.removeChild(object.element);
+						interactText("strgaunt", "As you equip these gauntlets you feel much stronger");
+						player.Attack += 5;
+						}
+						// if (!player.inventory.includes("strgaunt")) {
+						// 	player.pickUp(object.type);
+						// 	if (!document.querySelector("#textDiv")) {
+						// 		let textDiv = document.createElement('div');
+						// 		textDiv.id = "textDiv";
+						// 		container.appendChild(textDiv);
+						// 		let scrollText = document.createElement('p');
+						// 		scrollText.id = "scrollText";
+						// 		scrollText.innerHTML = "As you equip these gauntlets you feel much stronger";
+						// 		textDiv.appendChild(scrollText);
+						// 		player.Attack += 5;
+						// 	}
+						// 	else {
+						// 		textDiv.remove();
+						// 	}
+						// 	container.removeChild(object.element);
+						// }
+						break;
+					case "crystalball":
+						if(!player.inventory.includes("crystalball"))
+						{
+						container.removeChild(object.element);
+						interactText("crystalball", "You stare into the crystal ball, you feel as if you have increased your understanding for magic");
+						player.Magic += 5;
+						}
+						// if (!player.inventory.includes("crystalball")) {
+						// 	player.pickUp(object.type);
+						// 	if (!document.querySelector("#textDiv")) {
+						// 		let textDiv = document.createElement('div');
+						// 		textDiv.id = "textDiv";
+						// 		container.appendChild(textDiv);
+						// 		let scrollText = document.createElement('p');
+						// 		scrollText.id = "scrollText";
+						// 		scrollText.innerHTML = "You stare into the crystal ball, you feel as if you have increased your understanding for magic";
+						// 		textDiv.appendChild(scrollText);
+						// 		player.Magic += 5;
+								
+						// 	}
+						// 	else {
+						// 		textDiv.remove();
+						// 	}
+						// 	container.removeChild(object.element);
+						// }
+						break;
+					case "ring":
+						if(!player.inventory.includes("ring"))
+						{
+						container.removeChild(object.element);
+						interactText("ring", "This ring shines brightly has you pick it up, As you slide it onto your finger you feel your faith increase");
+						player.Faith += 5;
+						}
+						// if (!player.inventory.includes("ring")) {
+						// 	player.pickUp(object.type);
+						// 	if (!document.querySelector("#textDiv")) {
+						// 		let textDiv = document.createElement('div');
+						// 		textDiv.id = "textDiv";
+						// 		container.appendChild(textDiv);
+						// 		let scrollText = document.createElement('p');
+						// 		scrollText.id = "scrollText";
+						// 		scrollText.innerHTML = "This ring shines brightly has you pick it up, As you slide it onto your finger you feel your faith increase";
+						// 		textDiv.appendChild(scrollText);
+						// 		player.Faith += 5;
+								
+						// 	}
+						// 	else {
+						// 		textDiv.remove();
+						// 	}
+						// 	container.removeChild(object.element);
+						// }
+						break;
+					case "apple":
+						if(!player.inventory.includes("apple"))
+						{
+						container.removeChild(object.element);
+						interactText("apple", "You devour the delicous apple, you feel much more hearty");
+						player.MaxHealth += 50;
+						player.Health = player.MaxHealth;
+						}
+						// if (!player.inventory.includes("apple")) {
+						// 	player.pickUp(object.type);
+						// 	if (!document.querySelector("#textDiv")) {
+						// 		let textDiv = document.createElement('div');
+						// 		textDiv.id = "textDiv";
+						// 		container.appendChild(textDiv);
+						// 		let scrollText = document.createElement('p');
+						// 		scrollText.id = "scrollText";
+						// 		scrollText.innerHTML = "You devour the delicous apple, you feel much more hearty";
+						// 		textDiv.appendChild(scrollText);
+						// 		player.MaxHealth += 50;
+						// 		player.Health = player.MaxHealth;
+								
+						// 	}
+						// 	else {
+						// 		textDiv.remove();
+						// 	}
+						// 	container.removeChild(object.element);
+						// }
 						break;
 				}
 			}
 		}
-		// console.log("Space is pressed");
-		// let interactList = allGameObjects["level00"].map(x => x["className"]);
-		// console.log(interactList); 
+		
+	}
 
-
-		// console.log(allGameObjects["level00"].find(x =>  x.className === cssClass.SCROLL));
+	function interactText(objectType, itemDesc)
+	{
+			player.pickUp(objectType);
+			if (!document.querySelector("#textDiv")) {
+				let textDiv = document.createElement('div');
+				textDiv.id = "textDiv";
+				container.appendChild(textDiv);
+				let scrollText = document.createElement('p');
+				scrollText.id = "scrollText";
+				scrollText.innerHTML = itemDesc;
+				textDiv.appendChild(scrollText);
+			}
+			else {
+				textDiv.remove();
+			}
 	}
 
 	function checkIsLegalMove(nextX, nextY) {
@@ -490,7 +645,7 @@ function createBattleScene(enemy) {
 
 	let battleDesc = document.createElement("div");
 	battleDesc.id = "battleDesc";
-	battleDesc.innerHTML = enemy.Desc;
+	battleDesc.innerHTML = enemy.Greeting;
 	enemyText.appendChild(battleDesc);
 
 	let playerHP = document.createElement("div");
@@ -524,14 +679,13 @@ function createBattleScene(enemy) {
 	attackButton.className = "button";
 	attackButton.innerHTML = "FIGHT";
 	attackButton.onclick = function (e) {
-		battleDesc.innerHTML += 
-		`<p class='combat-text'>You attack the monster with your long-sword for ${player.Attack} damage</p>`;
+		battleDesc.innerHTML +=
+			`<p class='combat-text'>You attack the monster with your long-sword for ${player.Attack} damage</p>`;
 		enemy.takeDamage(player.Attack);
-		if(enemy.alive)
-		{
+		if (enemy.alive) {
 			enemy.enemyTurn();
 		}
-	
+
 	}
 	playerOptions.appendChild(attackButton)
 
@@ -555,16 +709,14 @@ function createBattleScene(enemy) {
 	magicButton.onclick = function (e) {
 		console.log("Fireballs Shall be cast");
 		battleDesc.innerHTML +=
-		`<p class='combat-text'>You channel a fireball at the end of your staff and fire it towards the monster, the monster is burned for ${player.Magic} damage</p>`;
+			`<p class='combat-text'>You channel a fireball at the end of your staff and fire it towards the monster, the monster is burned for ${player.Magic} damage</p>`;
 		enemy.takeDamage(player.Magic);
-		if(enemy.alive)
-		{
+		if (enemy.alive) {
 			enemy.enemyTurn();
 		}
 	}
 	// IF player.inventory contains fireBall Staff append button else dont
-	if(player.inventory.includes("fireStaff"))
-	{
+	if (player.inventory.includes("firestaff")) {
 		playerOptions.appendChild(magicButton);
 	}
 
@@ -574,9 +726,81 @@ function createBattleScene(enemy) {
 	prayerButton.className = "button";
 	prayerButton.innerHTML = "PRAY";
 	prayerButton.onclick = function (e) {
-		console.log("Oh lord he coming");
+		battleDesc.innerHTML +=
+			`<p class='combat-text'>You ring your bell, and light shines around you, you are healed for ${player.Faith} health</p>`;
+		player.Health = player.Health + player.Faith;
+		if(player.Health >= player.MaxHealth)
+		{
+			player.Health = player.MaxHealth;
+		}
+		if (enemy.alive) {
+			enemy.enemyTurn();
+		}
 	}
 	// IF player.inventory contains talisman append button else don't
-	playerOptions.appendChild(prayerButton);
+	if(player.inventory.includes("talisman"))
+	{
+		playerOptions.appendChild(prayerButton);
+	}
 
+
+}
+
+function gameOver()
+{
+	document.querySelector("#gridContainer").innerHTML = "";
+	worldX = 0;
+	worldY = 0;
+
+	playerWorldX = 14;
+	playerWorldY = 13;
+
+	player = new Player(1, 1, 100);
+
+
+	let gameOverText = document.createElement("h2");
+	gameOverText.id = "gameOverText";
+	gameOverText.innerHTML = "GAME OVER";
+	let gameOverDiv = document.createElement("div");
+	gameOverDiv.id = "gameOverDiv";
+	gameOverDiv.appendChild(gameOverText);
+	document.querySelector("#gridContainer").appendChild(gameOverDiv);
+	let restartButton = document.createElement("button");
+	restartButton.id = "restartButton";
+	restartButton.className = "button";
+	restartButton.innerHTML = "Play Again";
+	restartButton.onclick = function (e) {
+		NextLevel();
+	}
+	gameOverDiv.appendChild(restartButton);
+
+
+}
+
+function endGame() {
+	document.querySelector("#gridContainer").innerHTML = "";
+	worldX = 0;
+	worldY = 0;
+
+	playerWorldX = 14;
+	playerWorldY = 13;
+
+	player = new Player(1, 1, 100);
+
+
+	let gameOverText = document.createElement("h2");
+	gameOverText.id = "gameOverText";
+	gameOverText.innerHTML = "You have cleared the island";
+	let gameOverDiv = document.createElement("div");
+	gameOverDiv.id = "gameOverDiv";
+	gameOverDiv.appendChild(gameOverText);
+	document.querySelector("#gridContainer").appendChild(gameOverDiv);
+	let restartButton = document.createElement("button");
+	restartButton.id = "restartButton";
+	restartButton.className = "button";
+	restartButton.innerHTML = "Play Again";
+	restartButton.onclick = function (e) {
+		NextLevel();
+	}
+	gameOverDiv.appendChild(restartButton);
 }

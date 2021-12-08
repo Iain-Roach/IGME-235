@@ -203,12 +203,60 @@ span.bee01 {
 	background-position: -32px 0px;
 }
 
-span.firestaff
-{
+span.firestaff {
 	position: absolute;
 	left: -100px;
 	top: -100px;
 	background-position: -288px 352px;
+}
+
+span.talisman {
+	position: absolute;
+	left: -100px;
+	top: -100px;
+	background-position: -1088px -480px;
+}
+
+span.strgaunt {
+	position: absolute;
+	left: -100px;
+	top: -100px;
+	background-position: -448px -416px;
+}
+
+span.knight {
+	position: absolute;
+	left: -100px;
+	top: -100px;
+	background-position: -544px -128px;
+}
+
+span.crystalball {
+	position: absolute;
+	left: -100px;
+	top: -100px;
+	background-position: -64px -480px;
+}
+
+span.ring {
+	position: absolute;
+	left: -100px;
+	top: -100px;
+	background-position: -416px -448px;
+}
+
+span.apple {
+	position: absolute;
+	left: -100px;
+	top: -100px;
+	background-position: -128px -512px;
+}
+
+span.boss {
+	position: absolute;
+	left: -100px;
+	top: -100px;
+	background-position: -256px -32px;
 }
 
 #textDiv {
@@ -350,6 +398,19 @@ span.firestaff
 	color: whitesmoke;
 	text-align: left;
 	font-size: 18px;
+}
+
+#gameOverDiv {
+	position: relative;
+	text-align: center;
+	width: 960px;
+	height: 640px;
+	background-color: lightgray;
+}
+
+#gameOverDiv h2 {
+	padding-top: 6rem;
+	font-size: 36px;
 }
 
 

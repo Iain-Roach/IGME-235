@@ -3,6 +3,7 @@ class Player {
         this.x = x;
         this.y = y;
         this.health = health;
+        this.maxHealth = health;
         this.element = element;
         this.attack = 10;
         this.magic = 15;
@@ -24,6 +25,14 @@ class Player {
     }
     set Health(val) {
         this.health = val;
+    }
+
+    get MaxHealth() {
+        return this.maxHealth;
+    }
+
+    set MaxHealth(val) {
+        this.maxHealth = val;
     }
 
     get Attack() {
@@ -63,8 +72,11 @@ class Player {
         //Update hp on screen
         if(this.health <= 0)
         {
-            // Game Over Screen\
+            // Game Over Screen
             console.log("you are dead");
+
+            gameOver();
+
         }
     }
 
@@ -83,7 +95,6 @@ class Monster {
         this.alive = true;
         this.turn = false;
         this.attack = 5;
-        this.desc = "The Shard Keeper lumbers towards you, twirling its massive polearm. Good Luck";
     }
 
     get X() {
@@ -123,19 +134,9 @@ class Monster {
             console.log("You won the battle");
             this.alive = false;
             battleEnd();
-            // End battle Scene
-            // Remove enemy from enemies array
-            // Go back to level with enemy removed
-            // 
         }
     }
     
-    // enemyTurn()
-    // {
-    //     let text = document.querySelector("#battleDesc");
-    //     text.innerHTML += "Fus ro dah";
-    //     player.takeDamage(this.attack);
-    // }
 }
 
 class Medusa extends Monster {
@@ -183,5 +184,62 @@ class Bee extends Monster {
         let text = document.querySelector("#battleDesc");
         text.innerHTML += this.move;
         player.takeDamage(this.attack);
+    }
+}
+
+class Knight extends Monster {
+    constructor(x, y, element = undefined,) {
+        super(x, y ,element);
+        //super(y);
+        //super(element);
+        this.class = cssClass.KNIGHT;
+        this.health = 35;
+        this.name = "Knight";
+        this.attack = 15;
+        this.greeting = "A large knight stands at the ready";
+        this.move = "The knight winds up and slams you with his heavy fist for 15 damage.";
+    }
+
+    get Greeting() {
+        return this.greeting;
+    }
+
+    enemyTurn() {
+        let text = document.querySelector("#battleDesc");
+        text.innerHTML += this.move;
+        player.takeDamage(this.attack);
+    }
+}
+class Boss extends Monster {
+    constructor(x, y, element = undefined,) {
+        super(x, y ,element);
+        //super(y);
+        //super(element);
+        this.class = cssClass.BOSS;
+        this.health = 60;
+        this.name = "Boss";
+        this.attack = 25;
+        this.greeting = "A fully-armoured knight waits hands resting on his sword's pommel";
+        this.move = "The knight slashes with his sword dealing, 25 damage";
+    }
+
+    get Greeting() {
+        return this.greeting;
+    }
+
+    enemyTurn() {
+        let text = document.querySelector("#battleDesc");
+        text.innerHTML += this.move;
+        player.takeDamage(this.attack);
+    }
+
+    takeDamage(damage) {
+        this.health -= damage;
+        if(this.health <= 0)
+        {
+            console.log("You won the battle");
+            this.alive = false;
+            endGame();
+        }
     }
 }
