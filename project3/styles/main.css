@@ -1,12 +1,17 @@
 /* UI Styles */
+html {
+	font-family: 'Patrick Hand SC', cursive;
+	background-color: #eceff6;
+}
 h1{
-	font-family: 'Press Start 2P', cursive;
 	display: inline-block;
 	position:absolute;
 	font-size:1.3em;
 	top: 0;
 	left:1000px;
 	line-height:1.5em;
+	font-size: 30px;
+	
 }
 
 div#gridContainer{
@@ -16,12 +21,14 @@ div#gridContainer{
 	display:inline-block;
 	position:absolute;
 	z-index: 0; /* underneath everything */
+	
 }
 
 #instructions {
 	position: absolute;
 	top: 5em;
 	left:1000px;
+	font-size: 20px;
 	
 }
 
@@ -363,7 +370,7 @@ span.boss {
 }
 
 .button:active {
-	background-color: rgb(rgb(189, 0, 0), green, blue);
+	background-color: rgb(rgb(184, 14, 14), green, blue);
 	box-shadow: 0 5px #666;
 	transform: translateY(4px);
 }

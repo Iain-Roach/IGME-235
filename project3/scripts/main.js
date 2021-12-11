@@ -8,6 +8,12 @@ const cells = []; // the HTML elements - our "view"
 let enemies = []; // list of enemies in the level
 let player = new Player(1, 1, 100);
 
+const statHP = document.querySelector("#hp");
+const statATK = document.querySelector("#atk");
+const statMGK = document.querySelector("#mgk");
+const statFTH = document.querySelector("#fth");
+
+
 // World nav variables
 let worldX = 0;
 let worldY = 0;
@@ -70,7 +76,7 @@ let playerY = player.y;
 // II. INIT code
 window.onload = () => {
 	NextLevel();
-
+	setStats();
 	//clearGameObjects();
 }
 
@@ -91,6 +97,12 @@ function createGridElements(numRows, numCols) {
 	}
 }
 
+function setStats() {
+	statHP.innerHTML = "Health: " + player.Health + "/" + player.MaxHealth;
+	statATK.innerHTML = "Attack: " + player.Attack;
+	statMGK.innerHTML = "Magic: " + player.Magic;
+	statFTH.innerHTML = "Faith: " + player.Faith;
+}
 // Clears grid and loads the next level using world x and y
 function NextLevel() {
 	document.querySelector("#gridContainer").innerHTML = "";
@@ -103,7 +115,7 @@ function NextLevel() {
 	drawGameObjects(currentGameObjects);
 	audioSetup();
 	setupEvents();
-
+	setStats();
 }
 
 // set up audio
@@ -369,6 +381,7 @@ function movePlayer(e) {
 						container.removeChild(object.element);
 						interactText("strgaunt", "As you equip these gauntlets you feel much stronger");
 						player.Attack += 5;
+						setStats();
 						}
 						interactAudio.play();
 						break;
@@ -378,6 +391,7 @@ function movePlayer(e) {
 						container.removeChild(object.element);
 						interactText("crystalball", "You stare into the crystal ball, you feel as if you have increased your understanding for magic");
 						player.Magic += 5;
+						setStats();
 						}
 						interactAudio.play();
 						break;
@@ -387,6 +401,7 @@ function movePlayer(e) {
 						container.removeChild(object.element);
 						interactText("ring", "This ring shines brightly has you pick it up, As you slide it onto your finger you feel your faith increase");
 						player.Faith += 5;
+						setStats();
 						}
 						interactAudio.play();
 						break;
@@ -397,6 +412,7 @@ function movePlayer(e) {
 						interactText("apple", "You devour the delicous apple, you feel much more hearty");
 						player.MaxHealth += 50;
 						player.Health = player.MaxHealth;
+						setStats();
 						}
 						interactAudio.play();
 						break;
@@ -445,8 +461,6 @@ function movePlayer(e) {
 				playerWorldX = player.x;
 				playerWorldY = 19;
 				worldY += 1;
-				console.log("Hit top transfer zone");
-				console.log("Going to zone" + worldX + "|" + worldY);
 				NextLevel();
 			}
 			//Exits bottom of screen
@@ -454,8 +468,6 @@ function movePlayer(e) {
 				playerWorldX = player.x
 				playerWorldY = 0;
 				worldY -= 1;
-				console.log("Hit bottom transfer zone");
-				console.log("Going to zone" + worldX + "|" + worldY);
 				NextLevel();
 			}
 			//Exits right of screen
@@ -463,8 +475,7 @@ function movePlayer(e) {
 				playerWorldY = player.y;
 				playerWorldX = 0;
 				worldX += 1;
-				console.log("Hit right transfer zone");
-				console.log("Going to zone" + worldX + "|" + worldY);
+
 				NextLevel();
 			}
 			//Exits left of screen
@@ -472,8 +483,6 @@ function movePlayer(e) {
 				playerWorldY = player.y;
 				playerWorldX = 29;
 				worldX -= 1;
-				console.log("Hit left transfer zone");
-				console.log("Going to zone" + worldX + "|" + worldY);
 				NextLevel();
 			}
 			return true;
@@ -484,15 +493,12 @@ function movePlayer(e) {
 				playerWorldY = player.y;
 				playerWorldX = 0;
 				worldX += 1;
-				console.log("Hit right transfer zone");
-				console.log("Going to zone" + worldX + "|" + worldY);
+				crumbleAudio.play();
 				NextLevel();
 			}
 			else
 			{
-				console.log("you are to weak");
 				if (!document.querySelector("#textDiv")) {
-					console.log("DIED");
 					let textDiv = document.createElement('div');
 					textDiv.id = "textDiv";
 					container.appendChild(textDiv);
@@ -518,11 +524,10 @@ function movePlayer(e) {
 function setupEvents() {
 	window.onmouseup = (e) => {
 		e.preventDefault();
-		gridClicked(e);
+		// gridClicked(e);
 	};
 
 	window.onkeydown = (e) => {
-		//console.log("keydown=" + e.keyCode);
 
 		// checking for other keys - ex. 'p' and 'P' for pausing
 		var char = String.fromCharCode(e.keyCode);
@@ -534,21 +539,20 @@ function setupEvents() {
 	};
 }
 
-function gridClicked(e) {
-	let rect = container.getBoundingClientRect();
-	let mouseX = e.clientX - rect.x;
-	let mouseY = e.clientY - rect.y;
-	let columnWidth = cellWidth + cellSpacing;
-	let col = Math.floor(mouseX / columnWidth);
-	let row = Math.floor(mouseY / columnWidth);
-	let selectedCell = cells[row][col];
-	// selectedCell.classList.add('cellSelected');
-	console.log(`${col},${row}`);
-}
+// function gridClicked(e) {
+// 	let rect = container.getBoundingClientRect();
+// 	let mouseX = e.clientX - rect.x;
+// 	let mouseY = e.clientY - rect.y;
+// 	let columnWidth = cellWidth + cellSpacing;
+// 	let col = Math.floor(mouseX / columnWidth);
+// 	let row = Math.floor(mouseY / columnWidth);
+// 	let selectedCell = cells[row][col];
+// 	// selectedCell.classList.add('cellSelected');
+// 	console.log(`${col},${row}`);
+// }
 
 // Starts the battle scene
-function battle(enemy) {
-	console.log(enemy.name);
+function battle(enemy) {;
 	createBattleScene(enemy);
 }
 
@@ -644,7 +648,6 @@ function createBattleScene(enemy) {
 	magicButton.className = "button";
 	magicButton.innerHTML = "FIREBALL";
 	magicButton.onclick = function (e) {
-		console.log("Fireballs Shall be cast");
 		battleDesc.innerHTML +=
 			`<p class='combat-text'>You channel a fireball at the end of your staff and fire it towards the monster, the monster is burned for ${player.Magic} damage</p>`;
 		enemy.takeDamage(player.Magic);

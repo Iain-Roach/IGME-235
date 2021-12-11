@@ -69,11 +69,10 @@ class Player {
         this.health -= damage;
         let playerHP = document.querySelector("#playerHP");
         playerHP.innerHTML = "Health: " + player.health;
-        //Update hp on screen
+        setStats();
         if(this.health <= 0)
         {
             // Game Over Screen
-            console.log("you are dead");
 
             gameOver();
 
@@ -131,7 +130,6 @@ class Monster {
         this.health -= damage;
         if(this.health <= 0)
         {
-            console.log("You won the battle");
             this.alive = false;
             battleEnd();
         }
@@ -237,7 +235,6 @@ class Boss extends Monster {
         this.health -= damage;
         if(this.health <= 0)
         {
-            console.log("You won the battle");
             this.alive = false;
             endGame();
         }

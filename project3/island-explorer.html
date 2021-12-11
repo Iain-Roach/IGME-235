@@ -5,6 +5,9 @@
 	<meta charset="utf-8" />
 	<title>Island Explorer</title>
 	<link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Patrick+Hand+SC&family=Roboto&display=swap" rel="stylesheet">
 	<link href="styles/main.css" rel="stylesheet">
 	<script src="scripts/gamedata.js"></script>
 	<script src="scripts/char.js"></script>
@@ -18,15 +21,24 @@
 
 <body>
 	<div id="gridContainer"></div>
-	<h1>Island<br>Explorer!</h1>
+	<h1>Island Explorer!</h1>
 	<div id=instructions>
 		<p>Use the arrow keys to move around</p>
 		<p>Spacebar to interact with objects when on top of it</p>
 		<P>Run into enemies to fight them</P>
+		<hr>
+		<h3>Stats:</h3>
+		<p id="hp">Health: </p>
+		<p id="atk">Attack: </p>
+		<p id="mgk">Magic: </p>
+		<p id="fth">Faith: </p>
+		<hr>
+		<p><a href="about.html">About Page</a></p>
 	</div>
+
 	<!-- https://freesound.org/people/Dirtjm/sounds/262279/ -->
 	<audio id="effectAudio" src="sounds/thud.wav" controls></audio>
-	<audio id="attackAudio" src="sounds/sword hit.ogg" controls></audio>
+	<audio id="attackAudio" src="sounds/sword-hit.ogg" controls></audio>
 	<audio id="fireAudio" src="sounds/fireball.wav" controls></audio>
 	<audio id="crumbleAudio" src="sounds/crumble.wav" controls></audio>
 	<audio id="interactAudio" src="sounds/interact.wav" controls></audio>
