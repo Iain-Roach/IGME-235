@@ -184,6 +184,10 @@ footer article ul {
     padding-left: 1.5em;
 }
 
+a 
+{
+    text-decoration: none;
+}
 a:link {
     color: #103B4D;
 }
